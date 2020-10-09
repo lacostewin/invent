@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css.css">
+    <title>Поиск ТМЦ "НП ИВЦ"</title>
+</head>
+<body>
+<h1>Hello, [[${#httpServletRequest.remoteUser}]]!</h1>
+<a href="/main">Добавить ТМЦ</a>
+<div><H2>Найти ТМЦ:</H2></div>
+<form method="post" action="search">
+    <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
+    <button type="submit">Найти</button>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+
+<p>Список ТМЦ:</p>
+<table class="tmc">
+    <thead>
+    <tr>
+        <th>ID ТМЦ</th><th>Наименование ТМЦ</th><th>Серийный номер ТМЦ</th><th>За кем числится</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#messages}}
+        <tr>
+            <td>{{id}}</td>
+            <td><span>{{text}}</span></td>
+            <td><i>{{sn}}</i></td>
+            <td><i>{{owner}}</i></td>
+        </tr>
+    {{/messages}}
+    </tbody>
+</table>
+
+<form action="/logout" method="post">
+    <input type="submit" value="Выйти"/>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+</body>
+</html>

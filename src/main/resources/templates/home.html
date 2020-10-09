@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css.css">
+    <title>Инвентаризация PM&HM</title>
+</head>
+<body>
+<h1 align="center">Привет [[${#httpServletRequest.remoteUser}]]!</h1>
+<h2 align="center">Для продолжения <a th:href="@{/login}">авторизуйся</a></h2>
+<h2 align="center">или начни <a th:href="@{/main}">работать</a></h2>
+</body>
+</html>
