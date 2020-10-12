@@ -1,23 +1,26 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:form="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css.css">
     <title>Инвентаризация PM&HM</title>
 </head>
 <body>
-<td th:text="${#httpServletRequest.remoteUser}">, hello!</td>
+<p th:text="${#httpServletRequest.remoteUser}"></p>
 <a href="/search">Найти ТМЦ</a>
 <h3>Добавить ТМЦ:</h3>
 {{#error}}
     <strong style="color: rgb(20, 85, 162); font-size: 40px;">{{error}}</strong>
 {{/error}}
+
     <div>
         <form method="post">
             <input type="text" name="text" autofocus placeholder="Введите наименование ТМЦ" />
             <input type="text" name="sn" placeholder="Введите серийный номер ТМЦ" />
-            <input type="text" name="owner" placeholder="За кем числится ТМЦ" />
+            <td><select name="owner">
+                {{#list}}<option >{{.}}</option>{{/list}}
+            </select></td>
             <button type="submit">Записать!</button>
             <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
         </form>
@@ -36,11 +39,7 @@
         <td>{{id}}</td>
         <td><span>{{text}}</span></td>
         <td><i>{{sn}}</i></td>
-        <td><form action="/selowner" method="post" name="selowner">
-            <p><select size="1" multiple name="selowner[]">
-                <option value="{{owner}}" ><i>{{owner}}</i>
-            </select>
-        </form></td>
+        <td>{{owner}}</td>
         <td>
         <form action="/remove" method="post" name="remove" onsubmit="return confirm('Это удалит все записи о ТМЦ с этим серийным номером {{sn}} из базы данных. Вы уверены?');">
             <input type="submit" value="Удалить ТМЦ" />
@@ -52,7 +51,6 @@
     {{/messages}}
     </tbody>
 </table>
-
 <form action="/logout" method="post">
     <input type="submit" value="Выйти"/>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />

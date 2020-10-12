@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import javax.naming.NamingException;
-
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -22,21 +20,20 @@ public class MainController {
     private MessageDel messageDel;
     private LdapSearch ldapSearch;
 
-
 // Редирект с /
     @GetMapping("/")
-    public String index() throws NamingException {
+    public String index() {
         return "redirect:/main";
     }
 
 // Выводим все ТМЦ на страницу
     @GetMapping("/main")
-    public String main (Map <String, Object> model) throws NamingException {
-        Iterable<Message> messages = messageRepo.findAll();
+    public String main (Map <String, Object> model) {
+        Iterable<Message> messages = messageRepo2.findAll();
+        model.put("messages", messages);
         LdapSearch app = new LdapSearch();
-        app.ldapConnection();
-        String ldapuser = app.getAllUsers();
-        model.put("error", ldapuser);
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
         return "main";
     }
 
@@ -53,8 +50,11 @@ public class MainController {
                     messageRepo2.save(message);
                     Iterable<Message> messages = messageRepo2.findAll();
                     model.put("messages", messages);
+                    LdapSearch app = new LdapSearch();
+                    List<String> list = app.getAllPersonNames();
+                    model.put("list", list);
                 } else
-                    model.put("error", "Такая ТМЦ или серийный номер уже существует!");
+                    model.put("error", "Такой серийный номер уже существует!");
             } else
                 model.put("error", "ТМЦ не должно начинаться с цифры");
             Iterable<Message> messages = messageRepo2.findAll();

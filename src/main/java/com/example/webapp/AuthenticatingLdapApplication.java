@@ -11,8 +11,8 @@ public class AuthenticatingLdapApplication {
 
     public static void main(String[] args) throws NamingException {
         SpringApplication.run(AuthenticatingLdapApplication.class, args);
-        LdapSearch app = new LdapSearch();
-        app.ldapConnection();
-        app.getAllUsers();
+//        LdapSearch app = new LdapSearch();
+//        app.ldapConnection();
+//        app.getAllUsers();
     }
 }

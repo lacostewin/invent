@@ -1,46 +1,59 @@
 package com.example.webapp.config;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.NamingException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.*;
-import java.util.Properties;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 
 public class LdapSearch {
-
-    DirContext connection;
-    public void ldapConnection() {
-        Properties env = new Properties();
+    public List<String> getAllPersonNames() {
+        Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://regions.office.np-ivc.ru:389");
         env.put(Context.SECURITY_PRINCIPAL, "CN=ldap_user_ro,OU=Service,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru");
         env.put(Context.SECURITY_CREDENTIALS, "i8wx6NzLssM4");
+
+        DirContext ctx;
         try {
-            connection = new InitialDirContext(env);
-        } catch (javax.naming.NamingException ex) {
-            System.out.println(ex.getMessage());
-        } catch (NamingException e) {
-            e.printStackTrace();
+            ctx = new InitialDirContext(env);
+        } catch (NamingException | javax.naming.NamingException e) {
+            throw new RuntimeException(e);
         }
-    }
-    public String getAllUsers() throws NamingException, javax.naming.NamingException {
-        String searchFilter = "(objectClass=user)";
-        String[] reqAtt = { "displayName" };
-        SearchControls controls = new SearchControls();
-        controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        controls.setReturningAttributes(reqAtt);
-        NamingEnumeration<SearchResult> users = connection.search("OU=Active,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru", searchFilter, controls);
-        SearchResult result = null;
 
-        result = (SearchResult) users.next();
-        Attributes attr = result.getAttributes();
-        String name = attr.get("displayName").get(0).toString();
-        return name;
+        List<String> list = new LinkedList<String>();
+        NamingEnumeration results = null;
+        try {
+            SearchControls controls = new SearchControls();
+            controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            results = ctx.search("OU=Active,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru", "(objectclass=user)", controls);
 
-//        while (users.hasMore()) {
-//            result = (SearchResult) users.next();
-//            Attributes attr = result.getAttributes();
-//            String name = attr.get("displayName").get(0).toString();
-//            System.out.println(attr.get("displayName"));
-//        }
+            while (results.hasMore()) {
+                SearchResult searchResult = (SearchResult) results.next();
+                Attributes attributes = searchResult.getAttributes();
+                Attribute attr = attributes.get("displayName");
+                String cn = attr.get().toString();
+                list.add(cn);
+            }
+        } catch (NameNotFoundException e) {
+        } catch (NamingException | javax.naming.NamingException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (results != null) {
+                try {
+                    results.close();
+                } catch (Exception e) {
+                }
+            }
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+        return list;
     }
 }
