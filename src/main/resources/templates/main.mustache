@@ -1,13 +1,18 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:form="http://www.w3.org/1999/html">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:form="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css.css">
     <title>Инвентаризация PM&HM</title>
 </head>
 <body>
-<p th:text="${#httpServletRequest.remoteUser}"></p>
+
+<div sec:authorize="isAuthenticated()">
+<div sec:authentication="name">1</div>
+</div>
+
 <a href="/search">Найти ТМЦ</a>
 <h3>Добавить ТМЦ:</h3>
 {{#error}}

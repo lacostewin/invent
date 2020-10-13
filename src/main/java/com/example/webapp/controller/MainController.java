@@ -26,6 +26,13 @@ public class MainController {
     public MainController() {
     }
 
+    // Своя 403
+    @GetMapping ("/403")
+    public String error403() {
+        return "403";
+    }
+
+
     // Редирект с /
     @GetMapping("/")
     public String index(Map <String, Object> model) {
@@ -46,7 +53,7 @@ public class MainController {
         return "main";
     }
 
-// Редактирование владельца ТМЦ путём выбора list из списка
+// Редактирование владельца ТМЦ путём выбора list из списка основная форма
     @PostMapping("/update")
     public String modifyowner (
             @RequestParam String owner,
@@ -57,7 +64,27 @@ public class MainController {
         Message messages = new Message (owner, id, sn, text);
         messageModify.save(messages);
         model.put("messages", messages);
-        return "/main";
+        LdapSearch app = new LdapSearch();
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
+        return "redirect:/main";
+    }
+
+// Редактирование владельца ТМЦ путём выбора list из списка форма поиска
+    @PostMapping("/updates")
+    public String modifyowners (
+            @RequestParam String owner,
+            @RequestParam String sn,
+            @RequestParam String text,
+            @RequestParam Integer id,
+            Map<String, Object> model) {
+        Message messages = new Message (owner, id, sn, text);
+        messageModify.save(messages);
+        model.put("messages", messages);
+        LdapSearch app = new LdapSearch();
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
+        return "redirect:/search";
     }
 
 // Проверка на корректность заполненния полей описания ТМЦ и добавление ТМЦ.
@@ -101,9 +128,12 @@ public class MainController {
 // Выводим все ТМЦ на страницу
     @GetMapping("/search")
     public String search(Map<String, Object> model) {
+        LdapSearch app = new LdapSearch();
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
         Iterable<Message> messages = messageRepo.findAll();
         model.put("messages", messages);
-        return "search";
+        return "/search";
     }
 
 // Поиск по серийному номеру, названию ТМЦ и владельцу.
@@ -112,21 +142,39 @@ public class MainController {
         Streamable<Message> messages;
         if (searchsn != null && !searchsn.isEmpty()) {
             messages = messageRepo.findBySnContainingIgnoreCase(searchsn).and(messageRepo.findByTextContainingIgnoreCase(searchsn)).and(messageRepo.findByOwnerContainingIgnoreCase(searchsn));
+            LdapSearch app = new LdapSearch();
+            List<String> list = app.getAllPersonNames();
+            model.put("list", list);
         } else {
+            LdapSearch app = new LdapSearch();
+            List<String> list = app.getAllPersonNames();
+            model.put("list", list);
             Iterable<Message> messages2 = messageRepo2.findAll();
             model.put("message", messages2);
             return "redirect:/search";
         }
+        LdapSearch app = new LdapSearch();
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
         model.put("messages", messages);
-        return "search";
+        return "/search";
     }
 
-// Удаление ТМЦ из БД.
+// Удаление ТМЦ из БД основная форма.
     @PostMapping("/remove")
     public String remove (@RequestParam String sn, Map<String, Object> model) {
         Message messagedel = new Message (sn);
         messageDel.deleteBySn(sn);
         model.put("messages", messagedel);
         return "redirect:/main";
+    }
+
+//  Удаление ТМЦ из БД форма поиска.
+    @PostMapping("/removes")
+    public String removes (@RequestParam String sn, Map<String, Object> model) {
+        Message messagedel = new Message (sn);
+        messageDel.deleteBySn(sn);
+        model.put("messages", messagedel);
+        return "redirect:/search";
     }
 }

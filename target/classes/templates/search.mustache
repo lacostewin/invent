@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css.css">
@@ -29,7 +29,30 @@
             <td>{{id}}</td>
             <td><span>{{text}}</span></td>
             <td><i>{{sn}}</i></td>
-            <td><i>{{owner}}</i></td>
+
+            <td>
+                <form action="/updates" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
+                    <select name="owner">
+                        <option selected>{{owner}}</option>
+                        {{#list}}<option >{{.}}</option>{{/list}}
+                    </select>
+
+                    <input type="submit" value="Изменить владельца" />
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                    <input type="hidden" name="id" value="{{id}}"/>
+                    <input type="hidden" name="sn" value="{{sn}}"/>
+                    <input type="hidden" name="text" value="{{text}}"/>
+
+                </form>
+            </td>
+            <td>
+                <form action="/removes" method="post" name="remove" onsubmit="return confirm('Это удалит все записи о ТМЦ с этим серийным номером {{sn}} из базы данных. Вы уверены?');">
+                    <input type="submit" value="Удалить ТМЦ" />
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                    <input type="hidden" name="sn" value="{{sn}}"/>
+                </form>
+            </td>
+
         </tr>
     {{/messages}}
     </tbody>
