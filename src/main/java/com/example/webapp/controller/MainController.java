@@ -3,6 +3,7 @@ import com.example.webapp.config.LdapSearch;
 import com.example.webapp.domain.Message;
 import com.example.webapp.repos.MessageRepo;
 import com.example.webapp.repos.MessageRepo2;
+import com.example.webapp.repos.MessageModify;
 import com.example.webapp.repos.MessageDel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -13,6 +14,8 @@ import java.util.*;
 @Controller
 public class MainController {
     @Autowired
+    private MessageModify messageModify;
+    @Autowired
     private MessageRepo messageRepo;
     @Autowired
     private MessageRepo2 messageRepo2;
@@ -20,21 +23,41 @@ public class MainController {
     private MessageDel messageDel;
     private LdapSearch ldapSearch;
 
-// Редирект с /
+    public MainController() {
+    }
+
+    // Редирект с /
     @GetMapping("/")
-    public String index() {
+    public String index(Map <String, Object> model) {
+        LdapSearch app = new LdapSearch();
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
         return "redirect:/main";
     }
 
 // Выводим все ТМЦ на страницу
     @GetMapping("/main")
     public String main (Map <String, Object> model) {
-        Iterable<Message> messages = messageRepo2.findAll();
-        model.put("messages", messages);
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
+        Iterable<Message> messages = messageRepo2.findAll();
+        model.put("messages", messages);
         return "main";
+    }
+
+// Редактирование владельца ТМЦ путём выбора list из списка
+    @PostMapping("/update")
+    public String modifyowner (
+            @RequestParam String owner,
+            @RequestParam String sn,
+            @RequestParam String text,
+            @RequestParam Integer id,
+            Map<String, Object> model) {
+        Message messages = new Message (owner, id, sn, text);
+        messageModify.save(messages);
+        model.put("messages", messages);
+        return "/main";
     }
 
 // Проверка на корректность заполненния полей описания ТМЦ и добавление ТМЦ.
@@ -47,22 +70,31 @@ public class MainController {
         if (text != null && !text.isEmpty() & sn != null && !sn.isEmpty() & owner != null && !owner.isEmpty()) {
             if (!text.matches("^[0-9].*$")) {
                 if (!messageRepo2.existsMessageBySnIgnoreCase(sn)) {
-                    messageRepo2.save(message);
-                    Iterable<Message> messages = messageRepo2.findAll();
-                    model.put("messages", messages);
                     LdapSearch app = new LdapSearch();
                     List<String> list = app.getAllPersonNames();
                     model.put("list", list);
+                    messageRepo2.save(message);
+                    Iterable<Message> messages = messageRepo2.findAll();
+                    model.put("messages", messages);
                 } else
                     model.put("error", "Такой серийный номер уже существует!");
+                LdapSearch app = new LdapSearch();
+                List<String> list = app.getAllPersonNames();
+                model.put("list", list);
             } else
                 model.put("error", "ТМЦ не должно начинаться с цифры");
             Iterable<Message> messages = messageRepo2.findAll();
             model.put("messages", messages);
+            LdapSearch app = new LdapSearch();
+            List<String> list = app.getAllPersonNames();
+            model.put("list", list);
         } else {
             model.put("error", "Заполните все поля!");
             Iterable<Message> messages = messageRepo2.findAll();
             model.put("messages", messages);
+            LdapSearch app = new LdapSearch();
+            List<String> list = app.getAllPersonNames();
+            model.put("list", list);
         }
         return "main";
     }

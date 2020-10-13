@@ -18,11 +18,9 @@
         <form method="post">
             <input type="text" name="text" autofocus placeholder="Введите наименование ТМЦ" />
             <input type="text" name="sn" placeholder="Введите серийный номер ТМЦ" />
-
             <td><select name="owner">
                 {{#list}}<option >{{.}}</option>{{/list}}
             </select></td>
-
             <button type="submit">Записать!</button>
             <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
         </form>
@@ -41,8 +39,21 @@
         <td>{{id}}</td>
         <td><span>{{text}}</span></td>
         <td><i>{{sn}}</i></td>
-        <td>{{owner}}</td>
+        <td>
+            <form action="/update" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
+            <select name="owner">
+            <option selected>{{owner}}</option>
+            {{#list}}<option >{{.}}</option>{{/list}}
+            </select>
 
+                <input type="submit" value="Изменить владельца" />
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                <input type="hidden" name="id" value="{{id}}"/>
+                <input type="hidden" name="sn" value="{{sn}}"/>
+                <input type="hidden" name="text" value="{{text}}"/>
+
+        </form>
+        </td>
         <td>
         <form action="/remove" method="post" name="remove" onsubmit="return confirm('Это удалит все записи о ТМЦ с этим серийным номером {{sn}} из базы данных. Вы уверены?');">
             <input type="submit" value="Удалить ТМЦ" />
@@ -54,7 +65,6 @@
     {{/messages}}
     </tbody>
 </table>
-
 <form action="/logout" method="post">
     <input type="submit" value="Выйти"/>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />

@@ -24,6 +24,13 @@ public class Message {
         this.sn = sn;
     }
 
+    public Message(String owner, Integer id, String sn, String text) {
+        this.id = id;
+        this.owner = owner;
+        this.sn = sn;
+        this.text = text;
+    }
+
     public Integer getId() {
         return id;
     }
