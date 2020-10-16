@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:form="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
@@ -9,9 +9,10 @@
 </head>
 <body>
 
+
 <div sec:authorize="isAuthenticated()">
-<div sec:authentication="name">1</div>
-</div>
+    Authenticated as <span sec:authentication="username"></span></div>
+
 
 <a href="/search">Найти ТМЦ</a>
 <h3>Добавить ТМЦ:</h3>

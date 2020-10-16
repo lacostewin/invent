@@ -7,6 +7,9 @@ import com.example.webapp.repos.MessageModify;
 import com.example.webapp.repos.MessageDel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -50,6 +53,16 @@ public class MainController {
         model.put("list", list);
         Iterable<Message> messages = messageRepo2.findAll();
         model.put("messages", messages);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Collection<? extends GrantedAuthority> username = ((UserDetails)principal).getAuthorities();
+            System.out.println(username);
+        } else {
+            String username = principal.toString();
+            System.out.println(username);
+        }
+
         return "main";
     }
 

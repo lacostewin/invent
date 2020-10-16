@@ -15,8 +15,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/home", "/logout/**", "/logout-success", "/login/**").permitAll()
-//                .antMatchers("/**").hasRole("INVENT_ADMIN")
-//                .antMatchers("/search").hasAnyRole("INVENT_USER")
+                .antMatchers("/**").hasRole("INVENT_ADMIN")
+                .antMatchers("/search/**", "/static/css.**").hasRole("INVENT_USER")
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -36,6 +36,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userSearchBase("OU=Active,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru")
                 .groupSearchBase("OU=inventorization,OU=Groups,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru")
                 .groupSearchFilter("(member={0})")
+
                 .contextSource()
                 .url("ldap://regions.office.np-ivc.ru:389")
                 .managerDn("CN=ldap_user_ro,OU=Service,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru")
