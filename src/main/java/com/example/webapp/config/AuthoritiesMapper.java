@@ -12,10 +12,10 @@ public class AuthoritiesMapper implements GrantedAuthoritiesMapper {
         Set<Roles> roles = EnumSet.noneOf(Roles.class);
 
         for (GrantedAuthority a: authorities) {
-            if ("invent_admin".equals(a.getAuthority())) {
-                roles.add(Roles.INVENT_ADMIN);
-            } else if ("invent_user".equals(a.getAuthority())) {
-                roles.add(Roles.INVENT_USER);
+            if ("inventadmin".equals(a.getAuthority())) {
+                roles.add(Roles.INVENTADMIN);
+            } else if ("inventuser".equals(a.getAuthority())) {
+                roles.add(Roles.INVENTUSER);
             }
         }
         return roles;

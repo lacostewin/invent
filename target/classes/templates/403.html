@@ -1,11 +1,15 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="/css.css">
     <title>Инвентаризация PM&HM</title>
 </head>
 <body>
-<h1 align="center">Ой, [[${#httpServletRequest.remoteUser}]], нельзя сюда.</h1>
+<h1>Привет, [[${#httpServletRequest.remoteUser}]]!</h1>
+<p>тебе сюда нельзя =(</p>
+
+
 </body>
 </html>

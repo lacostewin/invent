@@ -13,10 +13,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Interface" />
         <option value="Enum" />
         <option value="Class" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -35,29 +35,30 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/templates" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/example/webapp/repos" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\java\ldap\src\main\resources\templates" />
+      <recent name="C:\java\ldap\src\main\java\com\example\authenticatingldap" />
+    </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="com.example.webapp.config" />
     </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="com.example.webapp.repos" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\java\ldap\src\main\resources\templates" />
+      <recent name="C:\java\ldap\src\main\java\com\example\webapp\repos" />
       <recent name="C:\java\ldap\src\main\resources\static" />
+      <recent name="C:\java\ldap\src\main\resources\templates" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.webapp.repos" />
       <recent name="com.example.webapp.config" />
       <recent name="com.example.webapp.domain" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\java\ldap\src\main\resources\templates" />
-      <recent name="C:\java\ldap\src\main\java\com\example\authenticatingldap" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.example.webapp.repos" />
     </key>
   </component>
   <component name="RunManager">
@@ -111,29 +112,33 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="867" y="275" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602129228925" />
-    <state width="1877" height="231" key="GridCell.Tab.0.bottom" timestamp="1602812032147">
+    <state width="1877" height="235" key="GridCell.Tab.0.bottom" timestamp="1603090024446">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602777583424" />
-    <state width="1877" height="231" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602812032147" />
+    <state width="1323" height="168" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1602875221277" />
+    <state width="1877" height="235" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1603043359866" />
+    <state width="1877" height="235" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603090024446" />
     <state width="1877" height="268" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676757" />
-    <state width="1877" height="231" key="GridCell.Tab.0.center" timestamp="1602812032147">
+    <state width="1877" height="235" key="GridCell.Tab.0.center" timestamp="1603090024446">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602777583424" />
-    <state width="1877" height="231" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602812032147" />
+    <state width="1323" height="168" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1602875221276" />
+    <state width="1877" height="235" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1603043359866" />
+    <state width="1877" height="235" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603090024446" />
     <state width="1877" height="268" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676756" />
-    <state width="1877" height="231" key="GridCell.Tab.0.left" timestamp="1602812032147">
+    <state width="1877" height="235" key="GridCell.Tab.0.left" timestamp="1603090024446">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602777583423" />
-    <state width="1877" height="231" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602812032147" />
+    <state width="1323" height="168" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1602875221276" />
+    <state width="1877" height="235" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1603043359866" />
+    <state width="1877" height="235" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603090024446" />
     <state width="1877" height="268" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676756" />
-    <state width="1877" height="231" key="GridCell.Tab.0.right" timestamp="1602812032147">
+    <state width="1877" height="235" key="GridCell.Tab.0.right" timestamp="1603090024446">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602777583424" />
-    <state width="1877" height="231" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602812032147" />
+    <state width="1323" height="168" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1602875221276" />
+    <state width="1877" height="235" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1603043359866" />
+    <state width="1877" height="235" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603090024446" />
     <state width="1877" height="268" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676756" />
     <state width="1877" height="362" key="GridCell.Tab.1.bottom" timestamp="1602756854825">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -155,11 +160,15 @@
     </state>
     <state width="1877" height="362" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602593437478" />
     <state width="1877" height="362" key="GridCell.Tab.1.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602756854825" />
-    <state x="461" y="165" width="1253" height="710" key="SettingsEditor" timestamp="1602180325147">
+    <state x="490" y="175" key="Maven.ArtifactSearchDialog" timestamp="1602832071422">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="490" y="175" key="Maven.ArtifactSearchDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602832071422" />
+    <state x="461" y="165" width="1253" height="710" key="SettingsEditor" timestamp="1602845807427">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1602180325147" />
-    <state x="461" y="165" width="1253" height="710" key="SettingsEditor/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602129334409" />
+    <state x="461" y="165" width="1253" height="710" key="SettingsEditor/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602845807427" />
     <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1602058743883">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -177,14 +186,15 @@
     </state>
     <state x="660" y="277" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1602593219423" />
     <state x="660" y="277" key="refactoring.ChangeSignatureDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602475702444" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1602477059870">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="438" y="168" key="run.anything.popup" timestamp="1602871759639">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
+    <state x="438" y="168" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1602871759639" />
     <state x="616" y="240" key="run.anything.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602477059870" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1602515706589">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1602845843210">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1602515706589" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601976339738" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602845843210" />
   </component>
 </project>

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:form="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css.css">
+    <title>Инвентаризация PM&HM</title>
+</head>
+<body>
+<a href="/main">Добавить ТМЦ</a>
+<div><H2>Найти ТМЦ:</H2></div>
+
+<form method="post" th:action="@{/search}">
+    <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
+    <button type="submit">Найти</button>
+</form>
+
+<p>Список ТМЦ:</p>
+<table class="tmc">
+    <thead>
+    <tr>
+        <th>ID ТМЦ</th><th>Наименование ТМЦ</th><th>Серийный номер ТМЦ</th><th>За кем числится</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr th:each="mess : ${messages}">
+            <td th:text="${mess.id}"></td>
+            <td th:text="${mess.text}"><span></span></td>
+            <td th:text="${mess.sn}"><i></i></td>
+            <td>
+                <form action="#" th:action="@{/updates}" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
+                    <select name="owner" >
+                        <option selected th:text="${mess.owner}"></option>
+                        <option th:each="lst : ${list}" th:text="${lst}" sec:authorize="hasRole('ROLE_INVENTADMIN')"></option>
+                    </select>
+                    <input type="submit" value="Изменить владельца" sec:authorize="hasRole('ROLE_INVENTADMIN')"/>
+                    <input type="hidden" name="id" th:value="${mess.id}"/>
+                    <input type="hidden" name="sn" th:value="${mess.sn}"/>
+                    <input type="hidden" name="text" th:value="${mess.text}"/>
+
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/removes}" method="post" name="removes" sec:authorize="hasRole('ROLE_INVENTADMIN')"
+                      th:snd="${mess.sn}" onsubmit="return confirm('Это удалит все записи о ТМЦ с серийным номером ' + this.getAttribute('snd') + ' из базы данных. Вы уверены?');">
+                    <input type="submit" value="Удалить ТМЦ" />
+                    <input type="hidden" name="sn" th:value="${mess.sn}"/>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Выйти"/>
+</form>
+</body>
+</html>

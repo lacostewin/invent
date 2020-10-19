@@ -35,6 +35,13 @@ public class MainController {
         return "403";
     }
 
+//    // Своя Home
+//    @GetMapping ("/home")
+//    public String home() {
+//        return "home";
+//    }
+
+
 
     // Редирект с /
     @GetMapping("/")
