@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:form="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css.css">
+    <title>Инвентаризация PM&HM</title>
+</head>
+<body>
+<div class="greetings">
+    <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Выйти"/>
+    </form>
+</div>
+
+<p>Список ТМЦ закреплённых за Вами:</p>
+
+<table class="tmc">
+    <thead>
+    <tr>
+        <th>ID ТМЦ</th><th>За Вами числится</th><th>Серийный номер ТМЦ</th><th>Подтвердить</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="mess : ${messages}">
+        <td th:text="${mess.id}"></td>
+        <td th:text="${mess.text}"><span></span></td>
+        <td th:text="${mess.sn}"><i></i></td>
+        <td>
+            <form action="#" th:action="@{/confirm}" method="post" >
+                <input type="checkbox" name="option2" value="a2" onselect="return confirm('У Вас действительно есть эта ТМЦ?');"><Br>
+                </select>
+            </form>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -7,9 +7,17 @@
     <link rel="stylesheet" href="css.css">
     <title>Инвентаризация PM&HM</title>
 </head>
-
 <body>
-<a href="/search">Найти ТМЦ</a>
+
+<div class="greetings">
+    <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Выйти"/>
+    </form>
+</div>
+<div class="navi">
+<a href="/search">Поиск ТМЦ</a>
+</div>
 <h3>Добавить ТМЦ:</h3>
 <div ></div>
 

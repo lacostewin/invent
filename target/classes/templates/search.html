@@ -7,19 +7,18 @@
     <link rel="stylesheet" href="css.css">
     <title>Инвентаризация PM&HM</title>
 </head>
-
-
-<div sec:authorize="hasRole('ROLE_INVENTADMIN')">
-    This content is only shown to administrators.
-</div>
-<div sec:authorize="hasRole('ROLE_INVENTUSER')">
-    This content is only shown to users.
-</div>
-
-
 <body>
+
+<div class="greetings">
+<p th:each="grt : ${greet}">Вы вошли как <strong  th:text="${grt}"></strong></p>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Выйти"/>
+    </form>
+</div>
+<div class="navi">
 <a href="/main">Добавить ТМЦ</a>
-<div><H2>Найти ТМЦ:</H2></div>
+</div>
+<div><h3>Найти ТМЦ:</h3></div>
 
 <form method="post" th:action="@{/search}">
     <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
@@ -62,8 +61,6 @@
     </tbody>
 </table>
 
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Выйти"/>
-</form>
+
 </body>
 </html>
