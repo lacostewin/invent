@@ -1,6 +1,6 @@
 package com.example.webapp.controller;
 import com.example.webapp.config.LdapSearch;
-import com.example.webapp.domain.Message;
+import com.example.webapp.domain.*;
 import com.example.webapp.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -19,13 +19,11 @@ public class MainController {
     private MessageModify messageModify;
     @Autowired
     private MessageRepo messageRepo;
-    @Autowired
-    private MessageRepo2 messageRepo2;
-    @Autowired
-    private MessageDel messageDel;
     private LdapSearch ldapSearch;
     @Autowired
-    private MessageByOwner messageByOwner;
+    private JournalAdd journalAdd;
+    @Autowired
+    private JournalFind journalFind;
 
     public MainController() {
     }
@@ -36,45 +34,24 @@ public class MainController {
         return "403";
     }
 
-//    // Своя Home
-//    @GetMapping ("/home")
-//    public String home() {
-//        return "home";
-//    }
-
-    // Редирект с /
-//    @GetMapping("/")
-//    public String index(Map <String, Object> model) {
-//        LdapSearch app = new LdapSearch();
-//        List<String> list = app.getAllPersonNames();
-//        model.put("list", list);
-//        return "redirect:/main";
-//    }
-
-
 //  Проверяем на принадлежность к группе и деректим на page где все ТМЦ закреплённые за аутентифицированным сотрудником
     @GetMapping("/")
     public String searchown(Map<String, Object> model) {
         Streamable<Message> messages;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_INVENTUSER"))) {
-
             Object sAMAccountName = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String sAMAccName = ((UserDetails) sAMAccountName).getUsername();
-
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = null;
-            if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
+            String username = ((LdapUserDetails) principal).getDn();
             String owner = username.split("\\,")[0].split("=")[1];
             model.put("greet", owner);
-            messages = messageByOwner.findByOwner(owner);
+            messages = messageRepo.findByOwner(owner);
             model.put("messages", messages);
-
             return "ownthing.html";
         }
         return "ownthing.html";
     }
-
 
     // Выводим все ТМЦ на страницу
     @GetMapping("/main")
@@ -82,13 +59,9 @@ public class MainController {
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
-        Iterable<Message> messages = messageRepo2.findAll();
+        Iterable<Message> messages = messageRepo.findAll();
         model.put("messages", messages);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
-        if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-        String displayName = username.split("\\,")[0].split("=")[1];
-        model.put("greet", displayName);
+        model.put("greet", GetDn.displayName);
         return "main";
     }
 
@@ -100,12 +73,22 @@ public class MainController {
         model.put("list", list);
         Iterable<Message> messages = messageRepo.findAll();
         model.put("messages", messages);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
-        if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-        String displayName = username.split("\\,")[0].split("=")[1];
-        model.put("greet", displayName);
+        model.put("greet", GetDn.displayName);
+
         return "/search";
+    }
+
+    @PostMapping("/hist")
+    public String hist(@RequestParam Long id,
+                       @RequestParam String sn,
+                       @RequestParam String text,
+                       @RequestParam String invid,
+                       Map<String, Object> model) {
+        Message messages = new Message (id, sn, text, invid);
+        model.put("messages", messages);
+        Iterable<Journal> journal = journalFind.findByMessageid(id);
+        model.put("journal", journal);
+        return "hist";
     }
 
 // Редактирование владельца ТМЦ путём выбора list из списка основная форма
@@ -114,21 +97,27 @@ public class MainController {
             @RequestParam String owner,
             @RequestParam String sn,
             @RequestParam String text,
-            @RequestParam Integer id,
+            @RequestParam String invid,
+            @RequestParam Long id,
+            @RequestParam String author,
             Map<String, Object> model) {
-        Message messages = new Message (owner, id, sn, text);
+
+        Journal journal = new Journal();
+        journal.setMessageid(id);
+        journal.setNewowner(owner);
+        journal.setDate(Calendar.getInstance().getTime());
+        journalAdd.save(journal);
+
+        Message messages = new Message (owner, id, sn, text, author, invid);
         messageModify.save(messages);
         model.put("messages", messages);
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
-        if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-        String displayName = username.split("\\,")[0].split("=")[1];
-        model.put("greet", displayName);
+        model.put("greet", GetDn.displayName);
         model.put("list", list);
         return "redirect:/main";
     }
+
 
 // Редактирование владельца ТМЦ путём выбора list из списка форма поиска
     @PostMapping("/updates")
@@ -136,19 +125,24 @@ public class MainController {
             @RequestParam String owner,
             @RequestParam String sn,
             @RequestParam String text,
-            @RequestParam Integer id,
+            @RequestParam Long id,
+            @RequestParam String invid,
+            @RequestParam String author,
             Map<String, Object> model) {
-        Message messages = new Message (owner, id, sn, text);
+
+        Journal journal = new Journal();
+        journal.setMessageid(id);
+        journal.setNewowner(owner);
+        journal.setDate(Calendar.getInstance().getTime());
+        journalAdd.save(journal);
+
+        Message messages = new Message (owner, id, sn, text, author, invid);
         messageModify.save(messages);
         model.put("messages", messages);
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
-        if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-        String displayName = username.split("\\,")[0].split("=")[1];
-        model.put("greet", displayName);
+        model.put("greet", GetDn.displayName);
         return "redirect:/search";
     }
 
@@ -157,56 +151,42 @@ public class MainController {
     public String add (
             @RequestParam String owner,
             @RequestParam String text,
-            @RequestParam String sn, Map<String, Object> model) {
-        Message message = new Message (text, sn, owner);
-        if (text != null && !text.isEmpty() & sn != null && !sn.isEmpty() & owner != null && !owner.isEmpty()) {
+            @RequestParam String sn,
+            @RequestParam String invid,
+            @RequestParam String author, Map<String, Object> model) {
+        Message message = new Message (text, sn, owner, author, invid);
+        if (text != null && !text.isEmpty() & sn != null && !sn.isEmpty() & owner != null && !owner.isEmpty() & invid != null && !invid.isEmpty()) {
             if (!text.matches("^[0-9].*$")) {
-                if (!messageRepo2.existsMessageBySnIgnoreCase(sn)) {
+                if (!messageRepo.existsMessageBySnIgnoreCase(sn) & !messageRepo.existsMessageByInvidIgnoreCase(invid)) {
+                    messageRepo.save(message);
                     LdapSearch app = new LdapSearch();
                     List<String> list = app.getAllPersonNames();
                     model.put("list", list);
-                    messageRepo2.save(message);
-                    Iterable<Message> messages = messageRepo2.findAll();
+                    Iterable<Message> messages = messageRepo.findAll();
                     model.put("messages", messages);
-                    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                    String username = null;
-                    if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-                    String displayName = username.split("\\,")[0].split("=")[1];
-                    model.put("greet", displayName);
+                    model.put("greet", GetDn.displayName);
                 } else
-                    model.put("error", "Такой серийный номер уже существует!");
+                    model.put("error", "Такой номер уже существует!");
                 LdapSearch app = new LdapSearch();
                 List<String> list = app.getAllPersonNames();
                 model.put("list", list);
-                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                String username = null;
-                if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-                String displayName = username.split("\\,")[0].split("=")[1];
-                model.put("greet", displayName);
+                model.put("greet", GetDn.displayName);
             } else
-                model.put("error", "ТМЦ не должно начинаться с цифры");
-            Iterable<Message> messages = messageRepo2.findAll();
+            model.put("error", "ТМЦ не должно начинаться с цифры");
+            Iterable<Message> messages = messageRepo.findAll();
             model.put("messages", messages);
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = null;
-            if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-            String displayName = username.split("\\,")[0].split("=")[1];
-            model.put("greet", displayName);
+            model.put("greet", GetDn.displayName);
         } else {
             model.put("error", "Заполните все поля!");
-            Iterable<Message> messages = messageRepo2.findAll();
+            Iterable<Message> messages = messageRepo.findAll();
             model.put("messages", messages);
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = null;
-            if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-            String displayName = username.split("\\,")[0].split("=")[1];
-            model.put("greet", displayName);
+            model.put("greet", GetDn.displayName);
         }
         return "main";
     }
@@ -216,65 +196,53 @@ public class MainController {
     public String search (String searchsn, Map<String, Object> model) {
         Streamable<Message> messages;
         if (searchsn != null && !searchsn.isEmpty()) {
-            messages = messageRepo.findBySnContainingIgnoreCase(searchsn).and(messageRepo.findByTextContainingIgnoreCase(searchsn)).and(messageRepo.findByOwnerContainingIgnoreCase(searchsn));
+            messages = messageRepo.findBySnContainingIgnoreCase(searchsn)
+                    .and(messageRepo.findByTextContainingIgnoreCase(searchsn))
+                    .and(messageRepo.findByOwnerContainingIgnoreCase(searchsn))
+                    .and(messageRepo.findByInvidContainingIgnoreCase(searchsn));
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = null;
-            if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-            String displayName = username.split("\\,")[0].split("=")[1];
-            model.put("greet", displayName);
+            model.put("greet", GetDn.displayName);
         } else {
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
-            Iterable<Message> messages2 = messageRepo2.findAll();
+            Iterable<Message> messages2 = messageRepo.findAll();
             model.put("message", messages2);
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = null;
-            if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-            String displayName = username.split("\\,")[0].split("=")[1];
-            model.put("greet", displayName);
+            model.put("greet", GetDn.displayName);
             return "redirect:/search";
         }
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
         model.put("messages", messages);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
-        if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-        String displayName = username.split("\\,")[0].split("=")[1];
-        model.put("greet", displayName);
+        model.put("greet", GetDn.displayName);
         return "/search";
     }
 
 // Удаление ТМЦ из БД основная форма.
     @PostMapping("/remove")
-    public String remove (@RequestParam String sn, Map<String, Object> model) {
+    public String remove (@RequestParam String sn, @RequestParam Long id, Map<String, Object> model) {
         Message messagedel = new Message (sn);
-        messageDel.deleteBySn(sn);
+        messageRepo.deleteBySn(sn);
+        journalFind.deleteByMessageid(id);
         model.put("messages", messagedel);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
-        if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-        String displayName = username.split("\\,")[0].split("=")[1];
-        model.put("greet", displayName);
+        model.put("greet", GetDn.displayName);
         return "redirect:/main";
     }
 
 //  Удаление ТМЦ из БД форма поиска.
     @PostMapping("/removes")
-    public String removes (@RequestParam String sn, Map<String, Object> model) {
+    public String removes (@RequestParam String sn, @RequestParam Long id, Map<String, Object> model) {
         Message messagedel = new Message (sn);
-        messageDel.deleteBySn(sn);
+        messageRepo.deleteBySn(sn);
+        journalFind.deleteByMessageid(id);
         model.put("messages", messagedel);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
-        if (principal instanceof UserDetails) username = ((LdapUserDetails) principal).getDn();
-        String displayName = username.split("\\,")[0].split("=")[1];
-        model.put("greet", displayName);
+        model.put("greet", GetDn.displayName);
         return "redirect:/search";
     }
+
+
+
 }

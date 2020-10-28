@@ -3,8 +3,19 @@ body {
     background: floralwhite;
     font-size: 23px;
     color: black;
-    display: grid;
-    margin: 15px;
+    position: relative;
+    margin: 0 auto;
+    max-width: 1500px;
+    min-width: 680px;
+}
+
+h3{
+    margin-left: 10px;
+}
+
+table {
+    width: 100%;
+    margin-left: 10px;
 }
 
 table.tmc tr {
@@ -29,11 +40,18 @@ tbody tr:nth-child(even) {
 .greetings {
     color: green;
     font-size: 13px;
+    z-index: 101;
     text-align: right;
+    float: right;
 }
 
 .navi {
     text-align: left;
-    position: absolute;
+    margin-left: 10px;
+}
 
+.confirm {
+    text-align: right;
+        margin-right: 42px;
+        margin-top: 15px;
 }

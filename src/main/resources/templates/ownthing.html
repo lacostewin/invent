@@ -14,22 +14,23 @@
         <input type="submit" value="Выйти"/>
     </form>
 </div>
-
-<p>Список ТМЦ закреплённых за Вами:</p>
-
+</br>
+<h3>Список ТМЦ закреплённых за Вами:</h3>
 <table class="tmc">
     <thead>
     <tr>
-        <th>ID ТМЦ</th><th>За Вами числится</th><th>Серийный номер ТМЦ</th><th>Подтвердить</th>
+        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Кто назначил</th><th>Подтвердить</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="mess : ${messages}">
         <td th:text="${mess.id}"></td>
         <td th:text="${mess.text}"><span></span></td>
+        <td th:text="${mess.invid}"></td>
         <td th:text="${mess.sn}"><i></i></td>
+        <td th:text="${mess.author}"><i></i></td>
         <td>
-            <form action="#" th:action="@{/confirm}" method="post" >
+            <form >
                 <input type="checkbox" name="option2" value="yes" ><Br>
                 </select>
             </form>
@@ -37,6 +38,9 @@
     </tr>
     </tbody>
 </table>
-
+<form action="@{/confirm}" method="post" name="confirm" onsubmit="return confirm('Вы уверены, что все перечисленные ТМЦ у Вас есть в наличии?');" class="confirm">
+    <input type="submit" value="Подтвердить наличие" />
+    <input type="hidden" name="sn" />
+</form>
 </body>
 </html>

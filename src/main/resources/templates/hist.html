@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:form="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css.css">
+    <title>Движение ТМЦ PM&HM</title>
+</head>
+<body>
+<table class="tmc">
+    <thead>
+    <tr>
+        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="mess : ${messages}">
+        <td th:text="${mess.id}"></td>
+        <td th:text="${mess.text}"><span></span></td>
+        <td th:text="${mess.invid}"></td>
+        <td th:text="${mess.sn}"><i></i></td>
+    </tr>
+    <thead>
+    <tr>
+        <th>Владелец</th><th>Дата перемещения</th>
+    </tr>
+</thead>
+    <tr th:each="jour : ${journal}">
+        <td th:text="${jour.newowner}"><i></i></td>
+        <td th:text="${jour.date}"><i></i></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

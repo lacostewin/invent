@@ -18,24 +18,25 @@
 <div class="navi">
 <a href="/main">Добавить ТМЦ</a>
 </div>
-<div><h3>Найти ТМЦ:</h3></div>
+<h3>Найти ТМЦ:</h3>
 
 <form method="post" th:action="@{/search}">
     <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
     <button type="submit">Найти</button>
 </form>
-
-<p>Список ТМЦ:</p>
+</br>
+<div>Список ТМЦ:</div>
 <table class="tmc">
     <thead>
     <tr>
-        <th>ID ТМЦ</th><th>Наименование ТМЦ</th><th>Серийный номер ТМЦ</th><th>За кем числится</th>
+        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>За кем числится</th><th>Автор записи</th>
     </tr>
     </thead>
     <tbody>
         <tr th:each="mess : ${messages}">
             <td th:text="${mess.id}"></td>
             <td th:text="${mess.text}"><span></span></td>
+            <td th:text="${mess.invid}"></td>
             <td th:text="${mess.sn}"><i></i></td>
             <td>
                 <form action="#" th:action="@{/updates}" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
@@ -43,24 +44,33 @@
                         <option selected th:text="${mess.owner}"></option>
                         <option th:each="lst : ${list}" th:text="${lst}" sec:authorize="hasRole('ROLE_INVENTADMIN')"></option>
                     </select>
-                    <input type="submit" value="Изменить владельца" sec:authorize="hasRole('ROLE_INVENTADMIN')"/>
+                    <input type="submit" value="Изменить" sec:authorize="hasRole('ROLE_INVENTADMIN')"/>
                     <input type="hidden" name="id" th:value="${mess.id}"/>
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
                     <input type="hidden" name="text" th:value="${mess.text}"/>
-
+                    <input type="hidden" name="invid" th:value="${mess.invid}"/>
+                    <input type="hidden" name="author" th:value="${greet}"/>
+                </form>
+                <form action="#" th:action="@{/hist}" method="post" name="hist">
+                    <input type="submit" value="H" />
+                    <input type="hidden" name="id" th:value="${mess.id}"/>
+                    <input type="hidden" name="sn" th:value="${mess.sn}"/>
+                    <input type="hidden" name="text" th:value="${mess.text}"/>
+                    <input type="hidden" name="invid" th:value="${mess.invid}"/>
+                    <input type="hidden" th:each="jour : ${journal}" th:value="${jour.newowner}"/>
                 </form>
             </td>
+            <td th:text="${mess.author}"><i></i></td>
             <td>
                 <form th:action="@{/removes}" method="post" name="removes" sec:authorize="hasRole('ROLE_INVENTADMIN')"
                       th:snd="${mess.sn}" onsubmit="return confirm('Это удалит все записи о ТМЦ с серийным номером ' + this.getAttribute('snd') + ' из базы данных. Вы уверены?');">
                     <input type="submit" value="Удалить ТМЦ" />
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
+                    <input type="hidden" name="id" th:value="${mess.id}"/>
                 </form>
             </td>
         </tr>
     </tbody>
 </table>
-
-
 </body>
 </html>
