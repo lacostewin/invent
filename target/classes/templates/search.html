@@ -8,17 +8,19 @@
     <title>Инвентаризация PM&HM</title>
 </head>
 <body>
-
 <div class="greetings">
-<p th:each="grt : ${greet}">Вы вошли как <strong  th:text="${grt}"></strong></p>
+    <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Выйти"/>
     </form>
 </div>
 <div class="navi">
-<a href="/main">Добавить ТМЦ</a>
+<a sec:authorize="hasRole('ROLE_INVENTADMIN')" href="/main">Добавить ТМЦ</a><a style="padding-left:4.00em;" href="/">Мои ТМЦ</a>
 </div>
 <h3>Найти ТМЦ:</h3>
+
+<div ></div>
+<strong style="color: rgb(20, 85, 162); font-size: 40px;" th:each="err : ${error}" th:text="${err}"></strong>
 
 <form method="post" th:action="@{/search}">
     <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
@@ -29,7 +31,7 @@
 <table class="tmc">
     <thead>
     <tr>
-        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>За кем числится</th><th>Автор записи</th>
+        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Владелец</th><th>Автор</th>
     </tr>
     </thead>
     <tbody>
@@ -62,11 +64,21 @@
             </td>
             <td th:text="${mess.author}"><i></i></td>
             <td>
-                <form th:action="@{/removes}" method="post" name="removes" sec:authorize="hasRole('ROLE_INVENTADMIN')"
-                      th:snd="${mess.sn}" onsubmit="return confirm('Это удалит все записи о ТМЦ с серийным номером ' + this.getAttribute('snd') + ' из базы данных. Вы уверены?');">
-                    <input type="submit" value="Удалить ТМЦ" />
+                <form th:action="@{/removes}" method="post" name="removes" sec:authorize="hasRole('ROLE_INVENTADMIN')" th:snd="${mess.sn}"
+                      onsubmit="return confirm('Это удалит все записи о ТМЦ с серийным номером ' + this.getAttribute('snd') + ' из базы данных. Вы уверены?');"
+                      enctype="multipart/form-data" >
+
+                    <label >
+                        <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
+                        <input type="file" name="file" accept="application/pkix-cert" style="display:none" />
+                        <input type="submit" value="Удалить" style='display: block; margin-left: auto; margin-right: auto;'/>
+                    </label>
+
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
                     <input type="hidden" name="id" th:value="${mess.id}"/>
+                    <input type="hidden" name="text" th:value="${mess.text}"/>
+                    <input type="hidden" name="invid" th:value="${mess.invid}"/>
+                    <input type="hidden" name="author" th:value="${greet}"/>
                 </form>
             </td>
         </tr>

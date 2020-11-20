@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css.css">
+    <title>Upload PM&HM</title>
+</head>
+<body>
+<strong style="color: rgb(20, 85, 162); font-size: 40px;" th:each="err : ${error}" th:text="${err}"></strong>
+
+<!--<a href="#" onClick="window.open('/upload','pagename','height=260,width=370'); return false;">New Page</a>-->
+
+
+<input type="file" id="fileElem" accept="application/pkix-cert" style="display:none" onchange="handleFiles(this.files)">
+<a href="#" id="fileSelect">Select some files</a>
+
+<script th:inline="javascript">
+var fileSelect = document.getElementById("fileSelect"),
+  fileElem = document.getElementById("fileElem");
+
+fileSelect.addEventListener("click", function (e) {
+  if (fileElem) {
+    fileElem.click();
+  }
+  e.preventDefault(); // предотвращает перемещение к "#"
+}, false);
+</script>
+
+
+
+
+
+
+<br />
+<form method="post" enctype="multipart/form-data" th:action="@{/upload}">
+    File to upload: <input type="file" name="file" accept="application/pkix-cert" onchange="">
+    <br />
+    <input type="submit" value="Upload">
+</form>
+
+<!--<div class="greetings">-->
+<!--    <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>-->
+<!--    <form th:action="@{/logout}" method="post">-->
+<!--        <input type="submit" value="Выйти"/>-->
+<!--    </form>-->
+<!--</div>-->
+</body>
+</html>

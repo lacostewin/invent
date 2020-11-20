@@ -18,9 +18,21 @@ public class Journal implements Serializable {
     private Long messageid;
     @Column(name = "date", columnDefinition = "TIMESTAMP")
     private java.util.Date date;
+    @Column(name = "author")
+    private String author;
+
 
     public Journal() {
     }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
 
 
     public Journal(Long id) {

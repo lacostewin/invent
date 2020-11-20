@@ -16,7 +16,7 @@
     </form>
 </div>
 <div class="navi">
-<a href="/search">Поиск ТМЦ</a>
+<a href="/search">Поиск ТМЦ</a><a style="padding-left:4.00em;" href="/">Мои ТМЦ</a>
 </div>
 <h3>Добавить ТМЦ:</h3>
 <div ></div>
@@ -40,7 +40,7 @@
 <table class="tmc">
     <thead>
     <tr>
-        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>За кем числится</th><th>Автор записи</th>
+        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Владелец</th><th>Автор</th>
     </tr>
     </thead>
     <tbody>
@@ -67,10 +67,20 @@
             <td th:text="${mess.author}"><i></i></td>
             <td>
                 <form th:action="@{/remove}" method="post" name="remove" th:snd="${mess.sn}"
-                      onsubmit="return confirm('Это удалит все записи о ТМЦ с этим серийным номером ' + this.getAttribute('snd') + ' из базы данных. Вы уверены?');">
-                    <input type="submit" value="Удалить ТМЦ" />
+                      onsubmit="return confirm('Это удалит все записи о ТМЦ с этим серийным номером ' + this.getAttribute('snd') + ' из базы данных. Вы уверены?');"
+                      enctype="multipart/form-data" >
+
+                    <label >
+                        <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
+                        <input type="file" name="file" accept="application/pkix-cert" style="display:none" />
+                        <input type="submit" value="Удалить" style='display: block; margin-left: auto; margin-right: auto;'/>
+                    </label>
+
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
                     <input type="hidden" name="id" th:value="${mess.id}"/>
+                    <input type="hidden" name="invid" th:value="${mess.invid}"/>
+                    <input type="hidden" name="text" th:value="${mess.text}"/>
+                    <input type="hidden" name="author" th:value="${greet}"/>
                 </form>
             </td>
         </tr>

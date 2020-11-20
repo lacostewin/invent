@@ -14,7 +14,7 @@
         <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th>
     </tr>
     </thead>
-    <tbody>
+    <br>
     <tr th:each="mess : ${messages}">
         <td th:text="${mess.id}"></td>
         <td th:text="${mess.text}"><span></span></td>
@@ -23,14 +23,16 @@
     </tr>
     <thead>
     <tr>
-        <th>Владелец</th><th>Дата перемещения</th>
+        <th>Владелец</th><th>Дата перемещения</th><th>Инициатор</th>
     </tr>
 </thead>
     <tr th:each="jour : ${journal}">
         <td th:text="${jour.newowner}"><i></i></td>
         <td th:text="${jour.date}"><i></i></td>
+        <td th:text="${jour.author}"><i></i></td>
     </tr>
     </tbody>
 </table>
+<p><a href="/search">Назад</a></p>
 </body>
 </html>

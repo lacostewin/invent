@@ -1,7 +1,6 @@
 package com.example.webapp.domain;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Table(name = "message")
@@ -50,6 +49,10 @@ public class Message implements Serializable {
         this.text = text;
         this.author = author;
         this.invid = invid;
+    }
+
+    public Message(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

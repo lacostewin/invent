@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css.css">
+    <title>Инвентаризация PM&HM</title>
+</head>
+<body>
+<h1><strong style="color: rgb(20, 85, 162); font-size: 40px;" th:each="err : ${error}" th:text="${err}"></strong></h1>
+
+<script th:inline="javascript">
+    document.write('<a style="padding-left:4.00em;" href="' + document.referrer + '">Назад</a>');
+</script>
+
+
+</div>
+</body>
+</html>

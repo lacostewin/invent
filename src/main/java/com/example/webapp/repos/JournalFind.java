@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 @Transactional
+
 public interface JournalFind extends CrudRepository<Journal, Long> {
     List<Journal> findByMessageid(Long messageid);
     List<Journal> deleteByMessageid(Long messageid);

@@ -10,12 +10,15 @@
 <h1>Привет, [[${#httpServletRequest.remoteUser}]]!</h1>
 <p>тебе сюда нельзя =(</p>
 
+<script th:inline="javascript">
+    document.write('<a href="' + document.referrer + '">Назад</a>');
+</script>
+
 <div class="greetings">
     <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Выйти"/>
     </form>
 </div>
-
 </body>
 </html>
