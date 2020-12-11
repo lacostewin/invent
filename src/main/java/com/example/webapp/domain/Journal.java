@@ -34,7 +34,6 @@ public class Journal implements Serializable {
     }
 
 
-
     public Journal(Long id) {
         this.id = id;
     }

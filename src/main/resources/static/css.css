@@ -9,6 +9,28 @@ body {
     min-width: 680px;
 }
 
+#er {
+  background: #000;
+  height: 100%;
+  opacity: 0.9;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  top: 0;
+  left: 0;
+}
+
+#popup {
+  height: 200px;
+  position: fixed;
+  top: 100px;
+  left: 40%;
+  color: #f00;
+  width: 352px;
+  text-align: center;
+}
+
+
 h3{
     margin-left: 10px;
 }

@@ -20,7 +20,12 @@
 <h3>Найти ТМЦ:</h3>
 
 <div ></div>
-<strong style="color: rgb(20, 85, 162); font-size: 40px;" th:each="err : ${error}" th:text="${err}"></strong>
+<div id="er" th:if="${error}">
+    <div id="popup">
+        <strong style="color: rgb(20, 85, 162);" th:each="err : ${error}" th:text="${err}"></strong>
+        <p style="cursor: pointer;" onclick="document.getElementById('er').style.display='none';" >Закрыть</p>
+    </div>
+</div>
 
 <form method="post" th:action="@{/search}">
     <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
@@ -40,13 +45,13 @@
             <td th:text="${mess.text}"><span></span></td>
             <td th:text="${mess.invid}"></td>
             <td th:text="${mess.sn}"><i></i></td>
-            <td>
+            <td style="display: flex; padding-bottom: 0; padding-top: 14px;">
                 <form action="#" th:action="@{/updates}" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
                     <select name="owner" >
                         <option selected th:text="${mess.owner}"></option>
                         <option th:each="lst : ${list}" th:text="${lst}" sec:authorize="hasRole('ROLE_INVENTADMIN')"></option>
                     </select>
-                    <input type="submit" value="Изменить" sec:authorize="hasRole('ROLE_INVENTADMIN')"/>
+                    <input type="submit" value="Изменить" sec:authorize="hasRole('ROLE_INVENTADMIN')" />
                     <input type="hidden" name="id" th:value="${mess.id}"/>
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
                     <input type="hidden" name="text" th:value="${mess.text}"/>
@@ -54,7 +59,7 @@
                     <input type="hidden" name="author" th:value="${greet}"/>
                 </form>
                 <form action="#" th:action="@{/hist}" method="post" name="hist">
-                    <input type="submit" value="H" />
+                    <input type="submit" value="H" style="margin-left: 20px;"/>
                     <input type="hidden" name="id" th:value="${mess.id}"/>
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
                     <input type="hidden" name="text" th:value="${mess.text}"/>
@@ -68,7 +73,7 @@
                       onsubmit="return confirm('Это удалит все записи о ТМЦ с серийным номером ' + this.getAttribute('snd') + ' из базы данных. Вы уверены?');"
                       enctype="multipart/form-data" >
 
-                    <label >
+                    <label>
                         <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
                         <input type="file" name="file" accept="application/pkix-cert" style="display:none" />
                         <input type="submit" value="Удалить" style='display: block; margin-left: auto; margin-right: auto;'/>
