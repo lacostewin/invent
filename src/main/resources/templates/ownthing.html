@@ -34,7 +34,8 @@
     </tr>
     </thead>
     <tbody>
-    <form th:action="@{/}" method="post" onsubmit="return confirm('Вы уверены, что все перечисленные ТМЦ у Вас есть в наличии?');">
+    <form th:action="@{/}" method="post" enctype="multipart/form-data"
+          onsubmit="return confirm('Вы уверены, что все перечисленные ТМЦ у Вас есть в наличии?');">
     <tr th:each="mess : ${messages}">
         <td th:text="${mess.id}"></td>
         <td th:text="${mess.text}"><span></span></td>
@@ -45,16 +46,42 @@
                 <input type="checkbox" name="checkboxName" id="checkbox_check" />
                 <input type="hidden" name="checkboxId" th:value="${mess.id}" />
         </td>
+
+        <input type="hidden" name="sn" th:value="${mess.sn}"/>
+        <input type="hidden" name="id" th:value="${mess.id}"/>
+        <input type="hidden" name="text" th:value="${mess.text}"/>
+        <input type="hidden" name="invid" th:value="${mess.invid}"/>
+        <input type="hidden" name="author" th:value="${greet}"/>
+
     </tr>
+    <tr style='display: contents;'>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style='display: flex;'>
+        <input type="checkbox" id="select-all" />
         <input type="submit" value="Подтвердить наличие" style='display: block; margin-left: auto;' />
+
+            <form enctype="multipart/form-data">
+                <label>
+                    <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
+                    <input type="file" name="file" accept="application/pkix-cert" style="display:none" />
+                </label>
+            </form>
+        </td>
+    </tr>
     </form>
     </tbody>
 </table>
 <script th:inline="javascript">
-$('#checkbox_check').on('click', function () {
-    let checkboxStatus = $(this).prop('checked')
-    console.log(checkboxStatus)
-})
+document.getElementById('select-all').onclick = function() {
+  var checkboxes = document.getElementsByName('checkboxName');
+  for (var checkbox of checkboxes) {
+    checkbox.checked = this.checked;
+  }
+}
 </script>
 </body>
 </html>

@@ -8,6 +8,7 @@ import com.lowagie.text.Image;
 import com.lowagie.text.pdf.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
+import org.springframework.http.ContentDisposition;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,12 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.Rectangle;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
@@ -87,25 +87,176 @@ public class MainController {
     //  Прохождение инвентаризации своих ТМЦ
     @PostMapping("/")
     public String confirms (
-            @RequestParam(name = "checkboxName", required = false)String[] checkboxValue, Map<String, Object> model) {
+            @RequestParam(name = "checkboxName", required = false)
+                    String[] checkboxValue, String[] checkboxId, Long id, String invid,
+                    Map<String, Object> model, MultipartFile file, HttpServletResponse remform) throws DocumentException, IOException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
-        model.put("greet", ownerth);
         Streamable<Message> messages;
         messages = messageRepo.findByOwner(ownerth);
-        model.put("messages", messages);
-        if (checkboxValue != null) {
-            System.out.println("checkbox is checked");
-            return "redirect:/";
-        }
-        else {
-            messages = messageRepo.findByOwner(ownerth);
-            model.put("messages", messages);
-            model.put("greet", ownerth);
-            model.put("error", "Нужно выбрать все ТМЦ. Если у Вас нет каких-либо ТМЦ свяжитесь с назначившим.");
-            return "ownthing.html";
-        }
+
+        if (checkboxValue != null && checkboxValue.length == messages.stream().count()) {
+
+            try {
+                if (!file.isEmpty()) {
+                    CertificateFactory fac = CertificateFactory.getInstance("X509");
+                    X509Certificate cert = (X509Certificate) fac.generateCertificate(file.getInputStream());
+                    if (cert.getIssuerX500Principal().toString().split("\\,")[0].split("=")[1].equals(CA)) {
+                        if (System.currentTimeMillis() < cert.getNotAfter().getTime()) {
+                            if (cert.getSubjectDN().toString().split("\\,")[1].split("=")[1].equals(ownerth)) {
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+                                Date date = new Date(System.currentTimeMillis());
+                                Streamable<Message> messag;
+                                messag = messageRepo.findByInvid(invid);
+
+                                final String FONT = "fonts/segoeuisl.ttf";
+                                BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                                Font font = new Font(bf, 12, Font.NORMAL);
+                                Font fontsignb = new Font(bf, 11, Font.BOLD);
+                                Font fontsignbb = new Font(bf, 11, Font.BOLD, Color.blue);
+                                Font fontsignn = new Font(bf, 10, Font.NORMAL);
+
+                                String headerKey = "Content-Disposition";
+
+                                    String filenames = "Инвентаризация " + ownerth + " " + formatter.format(date) + ".pdf";
+                                    ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                                            .filename(filenames, StandardCharsets.UTF_8)
+                                            .build();
+                                    String headerValue = "attachment; filename=" + contentDisposition;
+                                    remform.setContentType("application/pdf");
+                                    remform.setHeader(headerKey, headerValue);
+
+
+                                Document document = new Document(PageSize.A4.rotate());
+                                PdfWriter writer = PdfWriter.getInstance(document, remform.getOutputStream());
+
+                                final String IMG = "src/main/resources/static/pmhm.png";
+                                Image image = Image.getInstance(IMG);
+                                image.setAbsolutePosition(208, 48);
+                                image.scaleAbsolute(63, 33);
+
+                                document.left(100f);
+                                document.top(150f);
+                                document.open();
+
+                                document.add(new Paragraph("Инвентаризационная ведомость №            от " + formatter.format(date) + " г.", font));
+
+                                document.add(image);
+
+                                PdfPTable table = new PdfPTable(4);
+                                table.setWidthPercentage(100);
+                                table.setSpacingBefore(10);
+                                table.setSpacingAfter(10);
+
+                                Stream.of("Наименование", "Инв. №", "Сер. №", "Владелец")
+                                        .forEach(columnTitle -> {
+                                            PdfPCell head = new PdfPCell();
+                                            head.setBackgroundColor(Color.ORANGE);
+                                            head.setBorderWidth(1);
+                                            head.setPadding(5);
+                                            head.setHorizontalAlignment(1);
+
+
+                                            head.setPhrase(new Phrase(columnTitle, font));
+                                            table.addCell(head);
+                                        });
+                                for (Message mess : messages) {
+                                    table.addCell(mess.getText());
+                                    table.addCell(mess.getInvid());
+                                    table.addCell(mess.getSn());
+                                    table.addCell(ownerth);
+                                }
+                                document.add(table);
+
+                                PdfContentByte cb = writer.getDirectContent();
+
+                                Rectangle rect = new Rectangle();
+
+                                cb.roundRectangle(
+                                        rect.x + 195f,
+                                        rect.y + 85f,
+                                        rect.width + 270,
+                                        rect.height - 80, -10
+                                );
+
+                                ColumnText ct1 = new ColumnText(cb);
+                                ct1.setSimpleColumn(290, -5, 410, 86);
+                                ct1.addElement(new Paragraph("Документ подписан\nэлектронной подписью", fontsignb));
+                                ColumnText ct2 = new ColumnText(cb);
+                                ct2.setSimpleColumn(204, -10, 410, 51);
+                                ct2.addElement(new Paragraph("Владелец: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1], fontsignbb));
+                                ColumnText ct3 = new ColumnText(cb);
+                                ct3.setSimpleColumn(204, -25, 490, 36);
+                                ct3.addElement(new Paragraph("Сертификат: " + cert.getSerialNumber().toString(16), fontsignn));
+                                ColumnText ct4 = new ColumnText(cb);
+                                ct4.setSimpleColumn(204, -30, 580, 24);
+                                Date notBefore = cert.getNotBefore();
+                                Date notAfter = cert.getNotAfter();
+                                ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
+                                ct1.go();
+                                ct2.go();
+                                ct3.go();
+                                ct4.go();
+                                cb.stroke();
+                                document.close();
+
+//                                System.out.println(Arrays.toString(checkboxId));
+                                model.put("greet", ownerth);
+                                model.put("messages", messages);
+                                return "/ownthing.html";
+                            } else {
+                                LdapSearch app = new LdapSearch();
+                                List<String> list = app.getAllPersonNames();
+                                model.put("list", list);
+                                model.put("messages", messages);
+                                model.put("greet", ownerth);
+                                model.put("error", "Этот сертификат выдан не Вам!");
+                                return "/ownthing.html";
+                            }
+                        } else {
+                            LdapSearch app = new LdapSearch();
+                            List<String> list = app.getAllPersonNames();
+                            model.put("list", list);
+                            model.put("messages", messages);
+                            model.put("greet", ownerth);
+                            model.put("error", "Сертификат просрочен!");
+                            return "/ownthing.html";
+                        }
+                    } else {
+                        LdapSearch app = new LdapSearch();
+                        List<String> list = app.getAllPersonNames();
+                        model.put("list", list);
+                        model.put("messages", messages);
+                        model.put("greet", ownerth);
+                        model.put("error", "Сертификат выдан не НП ИВЦ!");
+                        return "/ownthing.html";
+                    }
+                } else {
+                    LdapSearch app = new LdapSearch();
+                    List<String> list = app.getAllPersonNames();
+                    model.put("list", list);
+                    model.put("messages", messages);
+                    model.put("greet", ownerth);
+                    model.put("error", "Сертификат не выбран.");
+                    return "/ownthing.html";
+                }
+            } catch (CertificateException e) {
+                LdapSearch app = new LdapSearch();
+                List<String> list = app.getAllPersonNames();
+                model.put("list", list);
+                model.put("messages", messages);
+                model.put("greet", ownerth);
+                model.put("error", "Выбран не сертификат.");
+                return "/ownthing.html";
+            }
+        } else{
+             messages = messageRepo.findByOwner(ownerth);
+             model.put("messages", messages);
+             model.put("greet", ownerth);
+             model.put("error", "Нужно выбрать все ТМЦ. Если у Вас нет каких-либо ТМЦ свяжитесь с назначившим.");
+             return "/ownthing.html";
+         }
     }
 
     // Выводим все ТМЦ на страницу
@@ -162,22 +313,33 @@ public class MainController {
             @RequestParam String author,
             Map<String, Object> model) {
         Journal journal = new Journal();
-        journal.setMessageid(id);
-        journal.setNewowner(owner);
-        journal.setAuthor(author);
-        journal.setDate(Calendar.getInstance().getTime());
-        journalAdd.save(journal);
-        Message messages = new Message (owner, id, sn, text, author, invid);
-        messageModify.save(messages);
-        model.put("messages", messages);
+        Message messages = new Message(owner, id, sn, text, author, invid);
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
-        model.put("greet", ownerth);
-        model.put("list", list);
-        return "redirect:/main";
+
+        Iterable<Message> messagess = messageRepo.findAll();
+        Optional<Message> ch = messageRepo.findById(id);
+        String ch2 = ch.get().getOwner();
+        if (!owner.equals(ch2)) {
+            journal.setMessageid(id);
+            journal.setNewowner(owner);
+            journal.setAuthor(author);
+            journal.setDate(Calendar.getInstance().getTime());
+            journalAdd.save(journal);
+            messageModify.save(messages);
+            model.put("messages", messagess);
+            model.put("greet", ownerth);
+            model.put("list", list);
+            return "/main";
+        } else
+            model.put("error", "Владельцы совпадают!");
+            model.put("list", list);
+            model.put("messages", messagess);
+            model.put("greet", ownerth);
+            return "/main.html";
     }
 
 
@@ -192,22 +354,33 @@ public class MainController {
             @RequestParam String author,
             Map<String, Object> model) {
         Journal journal = new Journal();
-        journal.setMessageid(id);
-        journal.setNewowner(owner);
-        journal.setAuthor(author);
-        journal.setDate(Calendar.getInstance().getTime());
-        journalAdd.save(journal);
         Message messages = new Message (owner, id, sn, text, author, invid);
-        messageModify.save(messages);
-        model.put("messages", messages);
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
-        model.put("list", list);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
+        Optional<Message> ch = messageRepo.findById(id);
+
+        Iterable<Message> messagess = messageRepo.findAll();
+        String ch2 = ch.get().getOwner();
+        if (!owner.equals(ch2)) {
+            journal.setMessageid(id);
+            journal.setNewowner(owner);
+            journal.setAuthor(author);
+            journal.setDate(Calendar.getInstance().getTime());
+            journalAdd.save(journal);
+            messageModify.save(messages);
+            model.put("messages", messages);
+            model.put("list", list);
+            model.put("greet", ownerth);
+            return "redirect:/search";
+        } else
+        model.put("error", "Владельцы совпадают!");
+        model.put("list", list);
+        model.put("messages", messagess);
         model.put("greet", ownerth);
-        return "redirect:/search";
+        return "/search";
     }
 
 // Проверка на корректность заполненния полей описания ТМЦ и добавление ТМЦ.
@@ -336,8 +509,9 @@ public String remove (@RequestParam Long id,
 
                     remform.setContentType("application/pdf");
                     String headerKey = "Content-Disposition";
-                    String headerValue = "attachment; filename=destroy.pdf";
+                    String headerValue = "attachment; filename=act.pdf";
                     remform.setHeader(headerKey, headerValue);
+
 
                     Document document = new Document(PageSize.A4);
                     PdfWriter.getInstance(document, remform.getOutputStream());
@@ -435,9 +609,9 @@ public String remove (@RequestParam Long id,
                 if (cert.getIssuerX500Principal().toString().split("\\,")[0].split("=")[1].equals(CA)) {
                     if (System.currentTimeMillis() < cert.getNotAfter().getTime()) {
                         if (cert.getSubjectDN().toString().split("\\,")[1].split("=")[1].equals(ownerth)) {
+                            SimpleDateFormat formatter= new SimpleDateFormat("dd.MM.yyyy");
+                            Date date = new Date(System.currentTimeMillis());
                         Message messagedel = new Message(id);
-
-
                         Streamable<Message> messag;
                         messag = messageRepo.findByInvid(invid);
 
@@ -449,9 +623,15 @@ public String remove (@RequestParam Long id,
                         Font fontsignn = new Font(bf, 10, Font.NORMAL);
 
                         String headerKey = "Content-Disposition";
-                        String headerValue = "attachment; filename=destroy.pdf";
-                        remform.setContentType("application/pdf");
-                        remform.setHeader(headerKey, headerValue);
+                            for (Message messs : messag) {
+                                String filenames = "Cписаниe ТМЦ инв. №" + messs.getInvid() + " от " + formatter.format(date) + ".pdf";
+                                ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                                        .filename(filenames, StandardCharsets.UTF_8)
+                                        .build();
+                                String headerValue = "attachment; filename=" + contentDisposition;
+                                remform.setContentType("application/pdf");
+                                remform.setHeader(headerKey, headerValue);
+                            }
 
                         Document document = new Document(PageSize.A4.rotate());
                         PdfWriter writer = PdfWriter.getInstance(document, remform.getOutputStream());
@@ -464,9 +644,8 @@ public String remove (@RequestParam Long id,
                         document.left(100f);
                         document.top(150f);
                         document.open();
-                            SimpleDateFormat formatter= new SimpleDateFormat("dd.MM.yyyy");
-                            Date date = new Date(System.currentTimeMillis());
-                            document.add(new Paragraph("Акт на списание материалов от " + formatter.format(date) + " г.", font));
+
+                            document.add(new Paragraph("Акт на списание материалов №     от " + formatter.format(date) + " г.", font));
 
                         document.add(image);
 
@@ -516,8 +695,7 @@ public String remove (@RequestParam Long id,
                         ct4.setSimpleColumn(204, -30, 580, 24);
                         Date notBefore = cert.getNotBefore();
                         Date notAfter = cert.getNotAfter();
-                        SimpleDateFormat dateFor = new SimpleDateFormat("dd.MM.yyyy");
-                        ct4.addElement(new Paragraph("Действителен с : " + dateFor.format(notBefore) + " по " + dateFor.format(notAfter), fontsignn));
+                        ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
                         ct1.go();
                         ct2.go();
                         ct3.go();
@@ -529,7 +707,7 @@ public String remove (@RequestParam Long id,
                         messageRepo.deleteById(id);
                         journalFind.deleteByMessageid(id);
                         model.put("messages", messagedel);
-                        return "redirect:/search";
+                        return "/search.html";
 
                         } else {
                             LdapSearch app = new LdapSearch();
