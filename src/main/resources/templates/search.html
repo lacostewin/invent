@@ -6,8 +6,10 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css.css">
     <title>Инвентаризация PM&HM</title>
+    <script th:src="sorttable.js"></script>
 </head>
 <body>
+<div class="menu">
 <div class="greetings">
     <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>
     <form th:action="@{/logout}" method="post">
@@ -18,25 +20,22 @@
 <a sec:authorize="hasRole('ROLE_INVENTADMIN')" href="/main">Добавить ТМЦ</a><a style="padding-left:4.00em;" href="/">Мои ТМЦ</a>
 </div>
 <h3>Найти ТМЦ:</h3>
-
-<div ></div>
 <div id="er" th:if="${error}">
     <div id="popup">
         <strong style="color: rgb(20, 85, 162);" th:each="err : ${error}" th:text="${err}"></strong>
         <p style="cursor: pointer;" onclick="document.getElementById('er').style.display='none';" >Закрыть</p>
     </div>
 </div>
-
-<form method="post" th:action="@{/search}">
+<form method="post" th:action="@{/search}" style="margin-left: 10px;">
     <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
     <button type="submit">Найти</button>
 </form>
-</br>
-<div>Список ТМЦ:</div>
-<table class="tmc">
+</div>
+<div class="content">
+<table class="sortable">
     <thead>
     <tr>
-        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Владелец</th><th>Автор</th>
+        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Владелец</th><th>Автор</th><th></th>
     </tr>
     </thead>
     <tbody>
@@ -45,7 +44,7 @@
             <td th:text="${mess.text}"><span></span></td>
             <td th:text="${mess.invid}"></td>
             <td th:text="${mess.sn}"><i></i></td>
-            <td style="display: flex; padding-bottom: 0; padding-top: 14px;">
+            <td style="display: flex; padding-bottom: 0; padding-top: 7px;">
                 <form action="#" th:action="@{/updates}" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
                     <select name="owner" >
                         <option selected th:text="${mess.owner}"></option>
@@ -74,9 +73,9 @@
                       enctype="multipart/form-data" >
 
                     <label>
-                        <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
+                        <img src="/crt.png" title="Выбрать файл сертификата" style='vertical-align: sub; margin-left: auto; margin-right: auto;' />
                         <input type="file" name="file" accept="application/pkix-cert" style="display:none" />
-                        <input type="submit" value="Удалить" style='display: block; margin-left: auto; margin-right: auto;'/>
+                        <input type="submit" value="Удалить" style='vertical-align: super; margin-left: auto; margin-right: auto;'/>
                     </label>
 
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
@@ -89,5 +88,6 @@
         </tr>
     </tbody>
 </table>
+</div>
 </body>
 </html>

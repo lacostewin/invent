@@ -8,26 +8,24 @@
     <title>Инвентаризация PM&HM</title>
 </head>
 <body>
+<div class="menu">
 <div class="greetings">
     <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Выйти"/>
     </form>
 </div>
-<div class="menu">
     <a sec:authorize="hasRole('ROLE_INVENTADMIN')" href="/main">Добавить ТМЦ</a><a style="padding-left:4.00em;" href="/search">Поиск ТМЦ</a>
-</div>
-</br>
-
 <div id="er" th:if="${error}">
     <div id="popup">
     <strong style="color: rgb(20, 85, 162);" th:each="err : ${error}" th:text="${err}"></strong>
     <p style="cursor: pointer;" onclick="document.getElementById('er').style.display='none';" >Закрыть</p>
     </div>
 </div>
-
 <h3>Список ТМЦ закреплённых за Вами:</h3>
-<table class="tmc">
+</div>
+<div class="content">
+<table class="sortable">
     <thead>
     <tr>
         <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Кто назначил</th><th>Подтвердить</th>
@@ -46,7 +44,6 @@
                 <input type="checkbox" name="checkboxName" id="checkbox_check" />
                 <input type="hidden" name="checkboxId" th:value="${mess.id}" />
         </td>
-
         <input type="hidden" name="sn" th:value="${mess.sn}"/>
         <input type="hidden" name="id" th:value="${mess.id}"/>
         <input type="hidden" name="text" th:value="${mess.text}"/>
@@ -63,7 +60,6 @@
         <td style='display: flex;'>
         <input type="checkbox" id="select-all" />
         <input type="submit" value="Подтвердить наличие" style='display: block; margin-left: auto;' />
-
             <form enctype="multipart/form-data">
                 <label>
                     <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
@@ -75,6 +71,7 @@
     </form>
     </tbody>
 </table>
+</div>
 <script th:inline="javascript">
 document.getElementById('select-all').onclick = function() {
   var checkboxes = document.getElementsByName('checkboxName');

@@ -7,6 +7,8 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.pdf.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Streamable;
 import org.springframework.http.ContentDisposition;
 import org.springframework.security.core.Authentication;
@@ -204,7 +206,7 @@ public class MainController {
 //                                System.out.println(Arrays.toString(checkboxId));
                                 model.put("greet", ownerth);
                                 model.put("messages", messages);
-                                return "/ownthing.html";
+                                return "ownthing.html";
                             } else {
                                 LdapSearch app = new LdapSearch();
                                 List<String> list = app.getAllPersonNames();
@@ -212,7 +214,7 @@ public class MainController {
                                 model.put("messages", messages);
                                 model.put("greet", ownerth);
                                 model.put("error", "Этот сертификат выдан не Вам!");
-                                return "/ownthing.html";
+                                return "ownthing.html";
                             }
                         } else {
                             LdapSearch app = new LdapSearch();
@@ -221,7 +223,7 @@ public class MainController {
                             model.put("messages", messages);
                             model.put("greet", ownerth);
                             model.put("error", "Сертификат просрочен!");
-                            return "/ownthing.html";
+                            return "ownthing.html";
                         }
                     } else {
                         LdapSearch app = new LdapSearch();
@@ -229,8 +231,8 @@ public class MainController {
                         model.put("list", list);
                         model.put("messages", messages);
                         model.put("greet", ownerth);
-                        model.put("error", "Сертификат выдан не НП ИВЦ!");
-                        return "/ownthing.html";
+                        model.put("error", "Сертификат выдан другой организацией!");
+                        return "ownthing.html";
                     }
                 } else {
                     LdapSearch app = new LdapSearch();
@@ -239,7 +241,7 @@ public class MainController {
                     model.put("messages", messages);
                     model.put("greet", ownerth);
                     model.put("error", "Сертификат не выбран.");
-                    return "/ownthing.html";
+                    return "ownthing.html";
                 }
             } catch (CertificateException e) {
                 LdapSearch app = new LdapSearch();
@@ -248,14 +250,14 @@ public class MainController {
                 model.put("messages", messages);
                 model.put("greet", ownerth);
                 model.put("error", "Выбран не сертификат.");
-                return "/ownthing.html";
+                return "ownthing.html";
             }
         } else{
              messages = messageRepo.findByOwner(ownerth);
              model.put("messages", messages);
              model.put("greet", ownerth);
              model.put("error", "Нужно выбрать все ТМЦ. Если у Вас нет каких-либо ТМЦ свяжитесь с назначившим.");
-             return "/ownthing.html";
+             return "ownthing.html";
          }
     }
 
@@ -265,7 +267,9 @@ public class MainController {
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
-        Iterable<Message> messages = messageRepo.findAll();
+        Pageable limit = PageRequest.of(0,10);
+
+        Iterable<Message> messages = messageRepo.findAll(limit);
         model.put("messages", messages);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
@@ -280,13 +284,14 @@ public class MainController {
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
-        Iterable<Message> messages = messageRepo.findAll();
+        Pageable limit = PageRequest.of(0,10);
+        Iterable<Message> messages = messageRepo.findAll(limit);
         model.put("messages", messages);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
         model.put("greet", ownerth);
-        return "/search";
+        return "search";
     }
 
     @PostMapping("/hist")
@@ -320,7 +325,10 @@ public class MainController {
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
 
-        Iterable<Message> messagess = messageRepo.findAll();
+        Pageable limit = PageRequest.of(0,10);
+
+
+        Iterable<Message> messagess = messageRepo.findAll(limit);
         Optional<Message> ch = messageRepo.findById(id);
         String ch2 = ch.get().getOwner();
         if (!owner.equals(ch2)) {
@@ -333,13 +341,13 @@ public class MainController {
             model.put("messages", messagess);
             model.put("greet", ownerth);
             model.put("list", list);
-            return "/main";
+            return "main";
         } else
             model.put("error", "Владельцы совпадают!");
             model.put("list", list);
             model.put("messages", messagess);
             model.put("greet", ownerth);
-            return "/main.html";
+            return "main.html";
     }
 
 
@@ -362,7 +370,8 @@ public class MainController {
         String ownerth = username.split("\\,")[0].split("=")[1];
         Optional<Message> ch = messageRepo.findById(id);
 
-        Iterable<Message> messagess = messageRepo.findAll();
+        Pageable limit = PageRequest.of(0,10);
+        Iterable<Message> messagess = messageRepo.findAll(limit);
         String ch2 = ch.get().getOwner();
         if (!owner.equals(ch2)) {
             journal.setMessageid(id);
@@ -380,7 +389,7 @@ public class MainController {
         model.put("list", list);
         model.put("messages", messagess);
         model.put("greet", ownerth);
-        return "/search";
+        return "search";
     }
 
 // Проверка на корректность заполненния полей описания ТМЦ и добавление ТМЦ.
@@ -399,7 +408,8 @@ public class MainController {
                     LdapSearch app = new LdapSearch();
                     List<String> list = app.getAllPersonNames();
                     model.put("list", list);
-                    Iterable<Message> messages = messageRepo.findAll();
+                    Pageable limit = PageRequest.of(0,10);
+                    Iterable<Message> messages = messageRepo.findAll(limit);
                     model.put("messages", messages);
                     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                     String username = ((LdapUserDetails) principal).getDn();
@@ -416,7 +426,8 @@ public class MainController {
                 model.put("greet", ownerth);
             } else
             model.put("error", "ТМЦ не должно начинаться с цифры");
-            Iterable<Message> messages = messageRepo.findAll();
+            Pageable limit = PageRequest.of(0,10);
+            Iterable<Message> messages = messageRepo.findAll(limit);
             model.put("messages", messages);
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
@@ -427,7 +438,8 @@ public class MainController {
             model.put("greet", ownerth);
         } else {
             model.put("error", "Заполните все поля!");
-            Iterable<Message> messages = messageRepo.findAll();
+            Pageable limit = PageRequest.of(0,10);
+            Iterable<Message> messages = messageRepo.findAll(limit);
             model.put("messages", messages);
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
@@ -453,14 +465,17 @@ public class MainController {
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
+            model.put("messages", messages);
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = ((LdapUserDetails) principal).getDn();
             String ownerth = username.split("\\,")[0].split("=")[1];
             model.put("greet", ownerth);
+            return "search";
         } else {
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
+            Pageable limit = PageRequest.of(0,10);
             Iterable<Message> messages2 = messageRepo.findAll();
             model.put("message", messages2);
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -469,15 +484,6 @@ public class MainController {
             model.put("greet", ownerth);
             return "redirect:/search";
         }
-        LdapSearch app = new LdapSearch();
-        List<String> list = app.getAllPersonNames();
-        model.put("list", list);
-        model.put("messages", messages);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((LdapUserDetails) principal).getDn();
-        String ownerth = username.split("\\,")[0].split("=")[1];
-        model.put("greet", ownerth);
-        return "/search";
     }
 
 
@@ -485,7 +491,7 @@ public class MainController {
 @PostMapping("/remove")
 public String remove (@RequestParam Long id,
                        @RequestParam String invid,
-                       MultipartFile file, HttpServletResponse remform, Map<String, Object> model) throws IOException{
+                       MultipartFile file, HttpServletResponse remform, Map<String, Object> model) throws IOException, DocumentException{
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = ((LdapUserDetails) principal).getDn();
     String ownerth = username.split("\\,")[0].split("=")[1];
@@ -495,101 +501,162 @@ public String remove (@RequestParam Long id,
             X509Certificate cert = (X509Certificate) fac.generateCertificate(file.getInputStream());
             if (cert.getIssuerX500Principal().toString().split("\\,")[0].split("=")[1].equals(CA)) {
                 if (System.currentTimeMillis() < cert.getNotAfter().getTime()) {
-                    Message messagedel = new Message(id);
+                    if (cert.getSubjectDN().toString().split("\\,")[1].split("=")[1].equals(ownerth)) {
+                        SimpleDateFormat formatter= new SimpleDateFormat("dd.MM.yyyy");
+                        Date date = new Date(System.currentTimeMillis());
+                        Message messagedel = new Message(id);
+                        Streamable<Message> messag;
+                        messag = messageRepo.findByInvid(invid);
 
+                        final String FONT = "fonts/segoeuisl.ttf";
+                        BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                        Font font = new Font(bf, 12, Font.NORMAL);
+                        Font fontsignb = new Font(bf, 11, Font.BOLD);
+                        Font fontsignbb = new Font(bf, 11, Font.BOLD, Color.blue);
+                        Font fontsignn = new Font(bf, 10, Font.NORMAL);
 
+                        String headerKey = "Content-Disposition";
+                        for (Message messs : messag) {
+                            String filenames = "Cписаниe ТМЦ инв. №" + messs.getInvid() + " от " + formatter.format(date) + ".pdf";
+                            ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                                    .filename(filenames, StandardCharsets.UTF_8)
+                                    .build();
+                            String headerValue = "attachment; filename=" + contentDisposition;
+                            remform.setContentType("application/pdf");
+                            remform.setHeader(headerKey, headerValue);
+                        }
 
-                    /// Создание формы акта списания (доработать!)
-                    Streamable<Message> messag;
-                    messag = messageRepo.findByInvid(invid);
+                        Document document = new Document(PageSize.A4.rotate());
+                        PdfWriter writer = PdfWriter.getInstance(document, remform.getOutputStream());
 
-                    final String FONT = "fonts/segoeuisl.ttf";
-                    BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                    Font font = new Font(bf, 12, Font.NORMAL);
+                        final String IMG = "src/main/resources/static/pmhm.png";
+                        Image image = Image.getInstance(IMG);
+                        image.setAbsolutePosition(208, 48);
+                        image.scaleAbsolute(63, 33);
 
-                    remform.setContentType("application/pdf");
-                    String headerKey = "Content-Disposition";
-                    String headerValue = "attachment; filename=act.pdf";
-                    remform.setHeader(headerKey, headerValue);
+                        document.left(100f);
+                        document.top(150f);
+                        document.open();
 
+                        document.add(new Paragraph("Акт на списание материалов №     от " + formatter.format(date) + " г.", font));
 
-                    Document document = new Document(PageSize.A4);
-                    PdfWriter.getInstance(document, remform.getOutputStream());
+                        document.add(image);
 
-                    document.open();
+                        PdfPTable table = new PdfPTable(3);
+                        table.setWidthPercentage(100);
+                        table.setSpacingBefore(10);
+                        table.setSpacingAfter(10);
 
-                    document.add(new Paragraph("Акт на списание материалов №  от  г.", font));
+                        Stream.of("Наименование", "Инв. №", "Инициатор")
+                                .forEach(columnTitle -> {
+                                    PdfPCell head = new PdfPCell();
+                                    head.setBackgroundColor(Color.ORANGE);
+                                    head.setBorderWidth(1);
+                                    head.setPadding(5);
+                                    head.setHorizontalAlignment(1);
+                                    head.setPhrase(new Phrase(columnTitle, font));
+                                    table.addCell(head);
+                                });
+                        for (Message mess : messag) {
+                            table.addCell(mess.getText());
+                            table.addCell(mess.getInvid());
+                            table.addCell(ownerth);
+                        }
+                        document.add(table);
 
-                    PdfPTable table = new PdfPTable(3);
-                    table.setWidthPercentage(100);
-                    table.setSpacingBefore(10);
-                    table.setSpacingAfter(10);
-                    Stream.of("Наименование", "Инв. №", "Инициатор")
-                            .forEach(columnTitle -> {
-                                PdfPCell head = new PdfPCell();
-                                head.setBackgroundColor(Color.ORANGE);
-                                head.setBorderWidth(1);
-                                head.setPadding(5);
-                                head.setHorizontalAlignment(1);
-                                head.setPhrase(new Phrase(columnTitle, font));
-                                table.addCell(head);
-                            });
-                    for (Message mess : messag) {
-                        table.addCell(mess.getText());
-                        table.addCell(mess.getInvid());
-                        table.addCell(ownerth);
+                        PdfContentByte cb = writer.getDirectContent();
+
+                        Rectangle rect = new Rectangle();
+
+                        cb.roundRectangle(
+                                rect.x + 195f,
+                                rect.y + 85f,
+                                rect.width + 270,
+                                rect.height - 80, -10
+                        );
+
+                        ColumnText ct1 = new ColumnText(cb);
+                        ct1.setSimpleColumn(290, -5, 410, 86);
+                        ct1.addElement(new Paragraph("Документ подписан\nэлектронной подписью", fontsignb));
+                        ColumnText ct2 = new ColumnText(cb);
+                        ct2.setSimpleColumn(204, -10, 410, 51);
+                        ct2.addElement(new Paragraph("Владелец: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1], fontsignbb));
+                        ColumnText ct3 = new ColumnText(cb);
+                        ct3.setSimpleColumn(204, -25, 490, 36);
+                        ct3.addElement(new Paragraph("Сертификат: " + cert.getSerialNumber().toString(16), fontsignn));
+                        ColumnText ct4 = new ColumnText(cb);
+                        ct4.setSimpleColumn(204, -30, 580, 24);
+                        Date notBefore = cert.getNotBefore();
+                        Date notAfter = cert.getNotAfter();
+                        ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
+                        ct1.go();
+                        ct2.go();
+                        ct3.go();
+                        ct4.go();
+                        cb.stroke();
+                        document.close();
+
+                        model.put("greet", ownerth);
+                        messageRepo.deleteById(id);
+                        journalFind.deleteByMessageid(id);
+                        model.put("messages", messagedel);
+                        return "main.html";
+
+                    } else {
+                        LdapSearch app = new LdapSearch();
+                        List<String> list = app.getAllPersonNames();
+                        model.put("list", list);
+                        Pageable limit = PageRequest.of(0,10);
+                        Iterable<Message> messages = messageRepo.findAll(limit);
+                        model.put("messages", messages);
+                        model.put("greet", ownerth);
+                        model.put("error", "Этот сертификат выдан не Вам!");
+                        return "main.html";
                     }
-                    document.add(table);
-                    document.close();
-//////////////
 
-
-                    model.put("greet", ownerth);
-                    messageRepo.deleteById(id);
-                    journalFind.deleteByMessageid(id);
-                    model.put("messages", messagedel);
-//                        System.out.println("Author: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1]);
-//                        System.out.println("SN: " + cert.getSerialNumber().toString(16));
-                    return "redirect:/main";
                 } else {
                     LdapSearch app = new LdapSearch();
                     List<String> list = app.getAllPersonNames();
                     model.put("list", list);
-                    Iterable<Message> messages = messageRepo.findAll();
+                    Pageable limit = PageRequest.of(0,10);
+                    Iterable<Message> messages = messageRepo.findAll(limit);
                     model.put("messages", messages);
                     model.put("greet", ownerth);
                     model.put("error", "Сертификат просрочен!");
-                    return "/search.html";
+                    return "main.html";
                 }
             } else {
                 LdapSearch app = new LdapSearch();
                 List<String> list = app.getAllPersonNames();
                 model.put("list", list);
-                Iterable<Message> messages = messageRepo.findAll();
+                Pageable limit = PageRequest.of(0,10);
+                Iterable<Message> messages = messageRepo.findAll(limit);
                 model.put("messages", messages);
                 model.put("greet", ownerth);
-                model.put("error", "Сертификат выдан не НП ИВЦ!");
-                return "/search.html";
+                model.put("error", "Сертификат выдан другой организацией!");
+                return "main.html";
             }
         } else {
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
-            Iterable<Message> messages = messageRepo.findAll();
+            Pageable limit = PageRequest.of(0,10);
+            Iterable<Message> messages = messageRepo.findAll(limit);
             model.put("messages", messages);
             model.put("greet", ownerth);
             model.put("error", "Сертификат не выбран.");
-            return "/search.html";
+            return "main.html";
         }
     } catch (CertificateException e) {
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
-        Iterable<Message> messages = messageRepo.findAll();
+        Pageable limit = PageRequest.of(0,10);
+        Iterable<Message> messages = messageRepo.findAll(limit);
         model.put("messages", messages);
         model.put("greet", ownerth);
         model.put("error", "Выбран не сертификат.");
-        return "/search.html";
+        return "main.html";
     }
 }
 
@@ -707,58 +774,63 @@ public String remove (@RequestParam Long id,
                         messageRepo.deleteById(id);
                         journalFind.deleteByMessageid(id);
                         model.put("messages", messagedel);
-                        return "/search.html";
+                        return "search.html";
 
                         } else {
                             LdapSearch app = new LdapSearch();
                             List<String> list = app.getAllPersonNames();
                             model.put("list", list);
-                            Iterable<Message> messages = messageRepo.findAll();
+                            Pageable limit = PageRequest.of(0,10);
+                            Iterable<Message> messages = messageRepo.findAll(limit);
                             model.put("messages", messages);
                             model.put("greet", ownerth);
                             model.put("error", "Этот сертификат выдан не Вам!");
-                            return "/search.html";
+                            return "search.html";
                         }
 
                     } else {
                         LdapSearch app = new LdapSearch();
                         List<String> list = app.getAllPersonNames();
                         model.put("list", list);
-                        Iterable<Message> messages = messageRepo.findAll();
+                        Pageable limit = PageRequest.of(0,10);
+                        Iterable<Message> messages = messageRepo.findAll(limit);
                         model.put("messages", messages);
                         model.put("greet", ownerth);
                         model.put("error", "Сертификат просрочен!");
-                        return "/search.html";
+                        return "search.html";
                     }
                 } else {
                     LdapSearch app = new LdapSearch();
                     List<String> list = app.getAllPersonNames();
                     model.put("list", list);
-                    Iterable<Message> messages = messageRepo.findAll();
+                    Pageable limit = PageRequest.of(0,10);
+                    Iterable<Message> messages = messageRepo.findAll(limit);
                     model.put("messages", messages);
                     model.put("greet", ownerth);
-                    model.put("error", "Сертификат выдан не НП ИВЦ!");
-                    return "/search.html";
+                    model.put("error", "Сертификат выдан другой организацией!");
+                    return "search.html";
                 }
             } else {
                 LdapSearch app = new LdapSearch();
                 List<String> list = app.getAllPersonNames();
                 model.put("list", list);
-                Iterable<Message> messages = messageRepo.findAll();
+                Pageable limit = PageRequest.of(0,10);
+                Iterable<Message> messages = messageRepo.findAll(limit);
                 model.put("messages", messages);
                 model.put("greet", ownerth);
                 model.put("error", "Сертификат не выбран.");
-                return "/search.html";
+                return "search.html";
             }
         } catch (CertificateException e) {
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
-            Iterable<Message> messages = messageRepo.findAll();
+            Pageable limit = PageRequest.of(0,10);
+            Iterable<Message> messages = messageRepo.findAll(limit);
             model.put("messages", messages);
             model.put("greet", ownerth);
             model.put("error", "Выбран не сертификат.");
-            return "/search.html";
+            return "search.html";
         }
     }
 }

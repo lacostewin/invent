@@ -1,7 +1,7 @@
 body {
     font-family: "Arial", Helvetica, Arial, sans-serif;
     background: floralwhite;
-    font-size: 23px;
+    font-size: 20px;
     color: black;
     position: relative;
     margin: 0 auto;
@@ -12,7 +12,7 @@ body {
 #er {
   background: #000;
   height: 100%;
-  opacity: 0.9;
+  opacity: 0.85;
   position: fixed;
   width: 100%;
   z-index: 100;
@@ -23,7 +23,7 @@ body {
 #popup {
   height: 200px;
   position: fixed;
-  top: 100px;
+  top: 130px;
   left: 40%;
   color: #f00;
   width: 352px;
@@ -33,14 +33,14 @@ body {
 
 h3{
     margin-left: 10px;
+    margin-bottom: 1px;
 }
 
 table {
     width: 100%;
-    margin-left: 10px;
 }
 
-table.tmc tr {
+table.sortable tr {
     padding: 5px;
     border-spacing: 7px 11px;
 }
@@ -49,14 +49,14 @@ table.tmc tr {
 tbody tr:nth-child(odd) {
     background-color: #C9E4F6;/* фон нечетных строк */
     font-color: black;
-    font-size: 20px;
-
+    font-size: 15px;
+    overflow-y: scroll;
 }
 
 tbody tr:nth-child(even) {
     background-color: #B4DAF2;/* фон четных строк */
     font-color: black;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .greetings {
@@ -65,6 +65,25 @@ tbody tr:nth-child(even) {
     z-index: 101;
     text-align: right;
     float: right;
+}
+
+.menu {
+    position: fixed;
+    width: 100%;
+    max-width: 1500px;
+    min-width: 680px;
+    background: floralwhite;
+    padding-bottom: 40px;
+}
+
+.content {
+    padding-top: 108px;
+}
+
+.content th {
+    position: sticky;
+    top: 110px;
+    z-index: 199;
 }
 
 .navi {
