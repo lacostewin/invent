@@ -11,6 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Streamable;
 import org.springframework.http.ContentDisposition;
+import org.springframework.mail.MailSendException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +21,8 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.Rectangle;
@@ -99,7 +104,6 @@ public class MainController {
         messages = messageRepo.findByOwner(ownerth);
 
         if (checkboxValue != null && checkboxValue.length == messages.stream().count()) {
-
             try {
                 if (!file.isEmpty()) {
                     CertificateFactory fac = CertificateFactory.getInstance("X509");
@@ -143,7 +147,6 @@ public class MainController {
                                 document.open();
 
                                 document.add(new Paragraph("Инвентаризационная ведомость №            от " + formatter.format(date) + " г.", font));
-
                                 document.add(image);
 
                                 PdfPTable table = new PdfPTable(4);
@@ -158,7 +161,6 @@ public class MainController {
                                             head.setBorderWidth(1);
                                             head.setPadding(5);
                                             head.setHorizontalAlignment(1);
-
 
                                             head.setPhrase(new Phrase(columnTitle, font));
                                             table.addCell(head);
@@ -203,7 +205,6 @@ public class MainController {
                                 cb.stroke();
                                 document.close();
 
-//                                System.out.println(Arrays.toString(checkboxId));
                                 model.put("greet", ownerth);
                                 model.put("messages", messages);
                                 return "ownthing.html";
@@ -308,6 +309,8 @@ public class MainController {
     }
 
 // Редактирование владельца ТМЦ путём выбора list из списка основная форма
+    @Autowired
+    private JavaMailSender javaMailSender;
     @PostMapping("/update")
     public String modifyowner (
             @RequestParam String owner,
@@ -327,7 +330,6 @@ public class MainController {
 
         Pageable limit = PageRequest.of(0,10);
 
-
         Iterable<Message> messagess = messageRepo.findAll(limit);
         Optional<Message> ch = messageRepo.findById(id);
         String ch2 = ch.get().getOwner();
@@ -341,6 +343,28 @@ public class MainController {
             model.put("messages", messagess);
             model.put("greet", ownerth);
             model.put("list", list);
+
+            SimpleMailMessage msg = new SimpleMailMessage();
+            try {
+                File devFile = new File("src/main/resources/static/config.ini");
+                BufferedReader fin = new BufferedReader(new FileReader(devFile));
+                String line;
+                while ((line = fin.readLine()) != null) {
+                    if (line.startsWith("setTo"))
+                        msg.setTo(line.split("=")[1].split(","));
+                    if (line.startsWith("setFrom")) {
+                        msg.setFrom(line.split("=")[1]);
+                    }
+                }
+                msg.setSubject("Перемещение ТМЦ");
+                msg.setText("Выполнено перемещение:\n\n" + "ТМЦ:\t\t" + text + "\nСер. №:\t" + sn + "\nВладелец:\t" + owner);
+                javaMailSender.send(msg);
+            } catch (IOException e) {
+                System.out.println("Файл не найден!");
+            } catch (MailSendException e) {
+                System.out.println("Параметр 'setTo' не указан!");
+            }
+
             return "main";
         } else
             model.put("error", "Владельцы совпадают!");
@@ -383,6 +407,28 @@ public class MainController {
             model.put("messages", messages);
             model.put("list", list);
             model.put("greet", ownerth);
+
+            SimpleMailMessage msg = new SimpleMailMessage();
+            try {
+                File devFile = new File("src/main/resources/static/config.ini");
+                BufferedReader fin = new BufferedReader(new FileReader(devFile));
+                String line;
+                while ((line = fin.readLine()) != null) {
+                    if (line.startsWith("setTo"))
+                        msg.setTo(line.split("=")[1].split(","));
+                    if (line.startsWith("setFrom")) {
+                        msg.setFrom(line.split("=")[1]);
+                    }
+                }
+                msg.setSubject("Перемещение ТМЦ");
+                msg.setText("Выполнено перемещение:\n\n" + "ТМЦ:\t\t" + text + "\nСер. №:\t" + sn + "\nВладелец:\t" + owner);
+                javaMailSender.send(msg);
+            } catch (IOException e) {
+                System.out.println("Файл не найден!");
+            } catch (MailSendException e) {
+                System.out.println("Параметр 'setTo' не указан!");
+            }
+
             return "redirect:/search";
         } else
         model.put("error", "Владельцы совпадают!");
