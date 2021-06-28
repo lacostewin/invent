@@ -27,7 +27,7 @@
     </div>
 </div>
 <form method="post" th:action="@{/search}" style="margin-left: 10px;">
-    <input type="text" name="searchsn" autofocus placeholder="Серийный номер или наименование"/>
+    <input type="text" name="searchsn" autofocus maxlength = "30" th:value="${ssn}" placeholder="Серийный номер или наименование" size="30">
     <button type="submit">Найти</button>
 </form>
 </div>

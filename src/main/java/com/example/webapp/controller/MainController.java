@@ -21,8 +21,6 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.Rectangle;
@@ -133,26 +131,30 @@ public class MainController {
                                     remform.setContentType("application/pdf");
                                     remform.setHeader(headerKey, headerValue);
 
-
                                 Document document = new Document(PageSize.A4.rotate());
                                 PdfWriter writer = PdfWriter.getInstance(document, remform.getOutputStream());
 
-                                final String IMG = "src/main/resources/static/pmhm.png";
-                                Image image = Image.getInstance(IMG);
-                                image.setAbsolutePosition(208, 48);
-                                image.scaleAbsolute(63, 33);
+                                HeaderFooter header = new HeaderFooter(new Phrase("Инвентаризационная ведомость №                              от " + formatter.format(date) + " г.", font), false);
+                                document.setHeader(header);
+                                HeaderFooter footer = new HeaderFooter(new Phrase("Страница "), new Phrase("."));
+
+                                footer.setAlignment(HeaderFooter.ALIGN_RIGHT);
+                                footer.setBorder(com.lowagie.text.Rectangle.NO_BORDER);
+                                document.setFooter(footer);
+
 
                                 document.left(100f);
                                 document.top(150f);
                                 document.open();
 
-                                document.add(new Paragraph("Инвентаризационная ведомость №            от " + formatter.format(date) + " г.", font));
-                                document.add(image);
+//                                document.add(new Paragraph("Инвентаризационная ведомость №            от " + formatter.format(date) + " г.", font));
+
 
                                 PdfPTable table = new PdfPTable(4);
                                 table.setWidthPercentage(100);
                                 table.setSpacingBefore(10);
-                                table.setSpacingAfter(10);
+                                table.setHeaderRows(1);
+
 
                                 Stream.of("Наименование", "Инв. №", "Сер. №", "Владелец")
                                         .forEach(columnTitle -> {
@@ -161,7 +163,6 @@ public class MainController {
                                             head.setBorderWidth(1);
                                             head.setPadding(5);
                                             head.setHorizontalAlignment(1);
-
                                             head.setPhrase(new Phrase(columnTitle, font));
                                             table.addCell(head);
                                         });
@@ -178,31 +179,42 @@ public class MainController {
                                 Rectangle rect = new Rectangle();
 
                                 cb.roundRectangle(
-                                        rect.x + 195f,
-                                        rect.y + 85f,
-                                        rect.width + 270,
-                                        rect.height - 80, -10
+                                        rect.x + 200f,
+                                        rect.y + 60f,
+                                        rect.width + 465,
+                                        rect.height - 55, -10
                                 );
 
+                                final String IMG = "src/main/resources/static/pmhm.png";
+                                Image image = Image.getInstance(IMG);
+                                image.scaleAbsolute(63, 33);
+
                                 ColumnText ct1 = new ColumnText(cb);
-                                ct1.setSimpleColumn(290, -5, 410, 86);
+                                ct1.setSimpleColumn(280, -10, 410, 51);
                                 ct1.addElement(new Paragraph("Документ подписан\nэлектронной подписью", fontsignb));
                                 ColumnText ct2 = new ColumnText(cb);
-                                ct2.setSimpleColumn(204, -10, 410, 51);
+                                ct2.setSimpleColumn(410, -10, 800, 60);
                                 ct2.addElement(new Paragraph("Владелец: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1], fontsignbb));
                                 ColumnText ct3 = new ColumnText(cb);
-                                ct3.setSimpleColumn(204, -25, 490, 36);
+                                ct3.setSimpleColumn(410, -25, 800, 42);
                                 ct3.addElement(new Paragraph("Сертификат: " + cert.getSerialNumber().toString(16), fontsignn));
                                 ColumnText ct4 = new ColumnText(cb);
-                                ct4.setSimpleColumn(204, -30, 580, 24);
+                                ct4.setSimpleColumn(410, -30, 800, 28);
                                 Date notBefore = cert.getNotBefore();
                                 Date notAfter = cert.getNotAfter();
                                 ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
+                                ColumnText ct5 = new ColumnText(cb);
+                                ct5.setSimpleColumn(209, -10, 410, 48);
+                                ct5.addElement(image);
+
                                 ct1.go();
                                 ct2.go();
                                 ct3.go();
                                 ct4.go();
+                                ct5.go();
+
                                 cb.stroke();
+
                                 document.close();
 
                                 model.put("greet", ownerth);
@@ -281,7 +293,7 @@ public class MainController {
 
     // Выводим все ТМЦ на страницу поиска
     @GetMapping("/search")
-    public String search(Map<String, Object> model) {
+    public String search2 (String searchsn, Map<String, Object> model) {
         LdapSearch app = new LdapSearch();
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
@@ -292,7 +304,44 @@ public class MainController {
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
         model.put("greet", ownerth);
+        model.put("ssn", searchsn);
         return "search";
+    }
+
+
+    // Поиск по серийному номеру, названию ТМЦ и владельцу.
+    @PostMapping("/search")
+    public String search (String searchsn, Map<String, Object> model) {
+        Streamable<Message> messages;
+        if (searchsn != null && !searchsn.isEmpty()) {
+            messages = messageRepo.findBySnContainingIgnoreCase(searchsn)
+                    .and(messageRepo.findByTextContainingIgnoreCase(searchsn))
+                    .and(messageRepo.findByOwnerContainingIgnoreCase(searchsn))
+                    .and(messageRepo.findByInvidContainingIgnoreCase(searchsn));
+            LdapSearch app = new LdapSearch();
+            List<String> list = app.getAllPersonNames();
+            model.put("list", list);
+            model.put("messages", messages);
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String username = ((LdapUserDetails) principal).getDn();
+            String ownerth = username.split("\\,")[0].split("=")[1];
+            model.put("greet", ownerth);
+            model.put("ssn", searchsn);
+            return "search";
+        } else {
+            LdapSearch app = new LdapSearch();
+            List<String> list = app.getAllPersonNames();
+            model.put("list", list);
+            Pageable limit = PageRequest.of(0,10);
+            Iterable<Message> messages2 = messageRepo.findAll();
+            model.put("message", messages2);
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String username = ((LdapUserDetails) principal).getDn();
+            String ownerth = username.split("\\,")[0].split("=")[1];
+            model.put("greet", ownerth);
+            model.put("ssn", searchsn);
+            return "search";
+        }
     }
 
     @PostMapping("/hist")
@@ -357,7 +406,7 @@ public class MainController {
                     }
                 }
                 msg.setSubject("Перемещение ТМЦ");
-                msg.setText("Выполнено перемещение:\n\n" + "ТМЦ:\t\t" + text + "\nСер. №:\t" + sn + "\nВладелец:\t" + owner);
+                msg.setText("Выполнено перемещение:\n\n" + "ТМЦ:\t\t" + text + "\nСер. №:\t" + sn + "\nИнв. №:\t" + invid + "\nВладелец:\t" + owner);
                 javaMailSender.send(msg);
             } catch (IOException e) {
                 System.out.println("Файл не найден!");
@@ -421,7 +470,7 @@ public class MainController {
                     }
                 }
                 msg.setSubject("Перемещение ТМЦ");
-                msg.setText("Выполнено перемещение:\n\n" + "ТМЦ:\t\t" + text + "\nСер. №:\t" + sn + "\nВладелец:\t" + owner);
+                msg.setText("Выполнено перемещение:\n\n" + "ТМЦ:\t\t" + text + "\nСер. №:\t" + sn + "\nИнв. №:\t" + invid + "\nВладелец:\t" + owner);
                 javaMailSender.send(msg);
             } catch (IOException e) {
                 System.out.println("Файл не найден!");
@@ -499,40 +548,6 @@ public class MainController {
     }
 
 
-// Поиск по серийному номеру, названию ТМЦ и владельцу.
-    @PostMapping("/search")
-    public String search (String searchsn, Map<String, Object> model) {
-        Streamable<Message> messages;
-        if (searchsn != null && !searchsn.isEmpty()) {
-            messages = messageRepo.findBySnContainingIgnoreCase(searchsn)
-                    .and(messageRepo.findByTextContainingIgnoreCase(searchsn))
-                    .and(messageRepo.findByOwnerContainingIgnoreCase(searchsn))
-                    .and(messageRepo.findByInvidContainingIgnoreCase(searchsn));
-            LdapSearch app = new LdapSearch();
-            List<String> list = app.getAllPersonNames();
-            model.put("list", list);
-            model.put("messages", messages);
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = ((LdapUserDetails) principal).getDn();
-            String ownerth = username.split("\\,")[0].split("=")[1];
-            model.put("greet", ownerth);
-            return "search";
-        } else {
-            LdapSearch app = new LdapSearch();
-            List<String> list = app.getAllPersonNames();
-            model.put("list", list);
-            Pageable limit = PageRequest.of(0,10);
-            Iterable<Message> messages2 = messageRepo.findAll();
-            model.put("message", messages2);
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String username = ((LdapUserDetails) principal).getDn();
-            String ownerth = username.split("\\,")[0].split("=")[1];
-            model.put("greet", ownerth);
-            return "redirect:/search";
-        }
-    }
-
-
 // Удаление ТМЦ из БД основная форма.
 @PostMapping("/remove")
 public String remove (@RequestParam Long id,
@@ -575,23 +590,23 @@ public String remove (@RequestParam Long id,
                         Document document = new Document(PageSize.A4.rotate());
                         PdfWriter writer = PdfWriter.getInstance(document, remform.getOutputStream());
 
-                        final String IMG = "src/main/resources/static/pmhm.png";
-                        Image image = Image.getInstance(IMG);
-                        image.setAbsolutePosition(208, 48);
-                        image.scaleAbsolute(63, 33);
+                        HeaderFooter header = new HeaderFooter(new Phrase("Акт на списание материалов №                             от " + formatter.format(date) + " г.", font), false);
+                        document.setHeader(header);
+                        HeaderFooter footer = new HeaderFooter(new Phrase("Страница "), new Phrase("."));
+
+                        footer.setAlignment(HeaderFooter.ALIGN_RIGHT);
+                        footer.setBorder(com.lowagie.text.Rectangle.NO_BORDER);
+                        document.setFooter(footer);
 
                         document.left(100f);
                         document.top(150f);
                         document.open();
 
-                        document.add(new Paragraph("Акт на списание материалов №     от " + formatter.format(date) + " г.", font));
-
-                        document.add(image);
 
                         PdfPTable table = new PdfPTable(3);
                         table.setWidthPercentage(100);
                         table.setSpacingBefore(10);
-                        table.setSpacingAfter(10);
+                        table.setHeaderRows(1);
 
                         Stream.of("Наименование", "Инв. №", "Инициатор")
                                 .forEach(columnTitle -> {
@@ -615,30 +630,39 @@ public String remove (@RequestParam Long id,
                         Rectangle rect = new Rectangle();
 
                         cb.roundRectangle(
-                                rect.x + 195f,
-                                rect.y + 85f,
-                                rect.width + 270,
-                                rect.height - 80, -10
+                                rect.x + 200f,
+                                rect.y + 60f,
+                                rect.width + 465,
+                                rect.height - 55, -10
                         );
 
+                        final String IMG = "src/main/resources/static/pmhm.png";
+                        Image image = Image.getInstance(IMG);
+                        image.scaleAbsolute(63, 33);
+
                         ColumnText ct1 = new ColumnText(cb);
-                        ct1.setSimpleColumn(290, -5, 410, 86);
+                        ct1.setSimpleColumn(280, -10, 410, 51);
                         ct1.addElement(new Paragraph("Документ подписан\nэлектронной подписью", fontsignb));
                         ColumnText ct2 = new ColumnText(cb);
-                        ct2.setSimpleColumn(204, -10, 410, 51);
+                        ct2.setSimpleColumn(410, -10, 800, 60);
                         ct2.addElement(new Paragraph("Владелец: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1], fontsignbb));
                         ColumnText ct3 = new ColumnText(cb);
-                        ct3.setSimpleColumn(204, -25, 490, 36);
+                        ct3.setSimpleColumn(410, -25, 800, 42);
                         ct3.addElement(new Paragraph("Сертификат: " + cert.getSerialNumber().toString(16), fontsignn));
                         ColumnText ct4 = new ColumnText(cb);
-                        ct4.setSimpleColumn(204, -30, 580, 24);
+                        ct4.setSimpleColumn(410, -30, 800, 28);
                         Date notBefore = cert.getNotBefore();
                         Date notAfter = cert.getNotAfter();
                         ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
+                        ColumnText ct5 = new ColumnText(cb);
+                        ct5.setSimpleColumn(209, -10, 410, 48);
+                        ct5.addElement(image);
+
                         ct1.go();
                         ct2.go();
                         ct3.go();
                         ct4.go();
+                        ct5.go();
                         cb.stroke();
                         document.close();
 
@@ -746,73 +770,82 @@ public String remove (@RequestParam Long id,
                                 remform.setHeader(headerKey, headerValue);
                             }
 
-                        Document document = new Document(PageSize.A4.rotate());
-                        PdfWriter writer = PdfWriter.getInstance(document, remform.getOutputStream());
+                            Document document = new Document(PageSize.A4.rotate());
+                            PdfWriter writer = PdfWriter.getInstance(document, remform.getOutputStream());
 
-                        final String IMG = "src/main/resources/static/pmhm.png";
-                        Image image = Image.getInstance(IMG);
-                        image.setAbsolutePosition(208, 48);
-                        image.scaleAbsolute(63, 33);
+                            HeaderFooter header = new HeaderFooter(new Phrase("Акт на списание материалов №                             от " + formatter.format(date) + " г.", font), false);
+                            document.setHeader(header);
+                            HeaderFooter footer = new HeaderFooter(new Phrase("Страница "), new Phrase("."));
 
-                        document.left(100f);
-                        document.top(150f);
-                        document.open();
+                            footer.setAlignment(HeaderFooter.ALIGN_RIGHT);
+                            footer.setBorder(com.lowagie.text.Rectangle.NO_BORDER);
+                            document.setFooter(footer);
 
-                            document.add(new Paragraph("Акт на списание материалов №     от " + formatter.format(date) + " г.", font));
+                            document.left(100f);
+                            document.top(150f);
+                            document.open();
 
-                        document.add(image);
 
-                        PdfPTable table = new PdfPTable(3);
-                        table.setWidthPercentage(100);
-                        table.setSpacingBefore(10);
-                        table.setSpacingAfter(10);
+                            PdfPTable table = new PdfPTable(3);
+                            table.setWidthPercentage(100);
+                            table.setSpacingBefore(10);
+                            table.setHeaderRows(1);
 
-                        Stream.of("Наименование", "Инв. №", "Инициатор")
-                                .forEach(columnTitle -> {
-                                    PdfPCell head = new PdfPCell();
-                                    head.setBackgroundColor(Color.ORANGE);
-                                    head.setBorderWidth(1);
-                                    head.setPadding(5);
-                                    head.setHorizontalAlignment(1);
-                                    head.setPhrase(new Phrase(columnTitle, font));
-                                    table.addCell(head);
-                                });
-                        for (Message mess : messag) {
-                            table.addCell(mess.getText());
-                            table.addCell(mess.getInvid());
-                            table.addCell(ownerth);
-                        }
-                        document.add(table);
+                            Stream.of("Наименование", "Инв. №", "Инициатор")
+                                    .forEach(columnTitle -> {
+                                        PdfPCell head = new PdfPCell();
+                                        head.setBackgroundColor(Color.ORANGE);
+                                        head.setBorderWidth(1);
+                                        head.setPadding(5);
+                                        head.setHorizontalAlignment(1);
+                                        head.setPhrase(new Phrase(columnTitle, font));
+                                        table.addCell(head);
+                                    });
+                            for (Message mess : messag) {
+                                table.addCell(mess.getText());
+                                table.addCell(mess.getInvid());
+                                table.addCell(ownerth);
+                            }
+                            document.add(table);
 
-                        PdfContentByte cb = writer.getDirectContent();
+                            PdfContentByte cb = writer.getDirectContent();
 
                             Rectangle rect = new Rectangle();
 
                             cb.roundRectangle(
-                                rect.x + 195f,
-                                rect.y + 85f,
-                                rect.width + 270,
-                                rect.height - 80, -10
-                        );
+                                    rect.x + 200f,
+                                    rect.y + 60f,
+                                    rect.width + 465,
+                                    rect.height - 55, -10
+                            );
 
-                        ColumnText ct1 = new ColumnText(cb);
-                        ct1.setSimpleColumn(290, -5, 410, 86);
-                        ct1.addElement(new Paragraph("Документ подписан\nэлектронной подписью", fontsignb));
-                        ColumnText ct2 = new ColumnText(cb);
-                        ct2.setSimpleColumn(204, -10, 410, 51);
-                        ct2.addElement(new Paragraph("Владелец: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1], fontsignbb));
-                        ColumnText ct3 = new ColumnText(cb);
-                        ct3.setSimpleColumn(204, -25, 490, 36);
-                        ct3.addElement(new Paragraph("Сертификат: " + cert.getSerialNumber().toString(16), fontsignn));
-                        ColumnText ct4 = new ColumnText(cb);
-                        ct4.setSimpleColumn(204, -30, 580, 24);
-                        Date notBefore = cert.getNotBefore();
-                        Date notAfter = cert.getNotAfter();
-                        ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
-                        ct1.go();
-                        ct2.go();
-                        ct3.go();
-                        ct4.go();
+                            final String IMG = "src/main/resources/static/pmhm.png";
+                            Image image = Image.getInstance(IMG);
+                            image.scaleAbsolute(63, 33);
+
+                            ColumnText ct1 = new ColumnText(cb);
+                            ct1.setSimpleColumn(280, -10, 410, 51);
+                            ct1.addElement(new Paragraph("Документ подписан\nэлектронной подписью", fontsignb));
+                            ColumnText ct2 = new ColumnText(cb);
+                            ct2.setSimpleColumn(410, -10, 800, 60);
+                            ct2.addElement(new Paragraph("Владелец: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1], fontsignbb));
+                            ColumnText ct3 = new ColumnText(cb);
+                            ct3.setSimpleColumn(410, -25, 800, 42);
+                            ct3.addElement(new Paragraph("Сертификат: " + cert.getSerialNumber().toString(16), fontsignn));
+                            ColumnText ct4 = new ColumnText(cb);
+                            ct4.setSimpleColumn(410, -30, 800, 28);
+                            Date notBefore = cert.getNotBefore();
+                            Date notAfter = cert.getNotAfter();
+                            ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
+                            ColumnText ct5 = new ColumnText(cb);
+                            ct5.setSimpleColumn(209, -10, 410, 48);
+                            ct5.addElement(image);
+
+                            ct1.go();
+                            ct2.go();
+                            ct3.go();
+                            ct4.go();
+                            ct5.go();
                         cb.stroke();
                         document.close();
 

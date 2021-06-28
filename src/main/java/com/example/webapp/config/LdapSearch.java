@@ -13,7 +13,7 @@ public class LdapSearch {
         Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://regions.office.np-ivc.ru:389");
-        env.put(Context.SECURITY_PRINCIPAL, "CN=ldap_user_ro,OU=Service,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru");
+        env.put(Context.SECURITY_PRINCIPAL, "CN=ldap_user_ro,OU=Service,OU=Users,OU=nsk,OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru");
         env.put(Context.SECURITY_CREDENTIALS, "i8wx6NzLssM4");
 
         DirContext ctx;
@@ -27,8 +27,10 @@ public class LdapSearch {
         NamingEnumeration results = null;
         try {
             SearchControls controls = new SearchControls();
+            String[] attrIDs = {"displayName"};
             controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            results = ctx.search("OU=Active,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru", "(objectclass=user)", controls);
+            controls.setReturningAttributes(attrIDs) ;
+            results = ctx.search("OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru","(&(objectClass=user)(!(objectCategory=computer)))", controls);
 
             while (results.hasMore()) {
                 SearchResult searchResult = (SearchResult) results.next();

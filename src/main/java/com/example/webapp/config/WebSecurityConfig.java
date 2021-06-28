@@ -36,13 +36,13 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         authBuilder
                 .ldapAuthentication()
-                .userSearchFilter("(&(objectClass=person)(objectClass=user)(sAMAccountName={0})(|(memberOf=cn=inventadmin,OU=inventorization,OU=Groups,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru)(memberOf=cn=inventuser,OU=inventorization,OU=Groups,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru)))")
-                .userSearchBase("OU=Active,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru")
-                .groupSearchBase("OU=inventorization,OU=Groups,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru")
+                .userSearchFilter("(&(objectClass=person)(objectClass=user)(sAMAccountName={0})(|(memberOf=CN=inventadmin,OU=inventorization,OU=Groups,OU=nsk,OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru)(memberOf=CN=inventuser,OU=inventorization,OU=Groups,OU=nsk,OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru)))")
+                .userSearchBase("OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru")
+                .groupSearchBase("OU=inventorization,OU=Groups,OU=nsk,OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru")
                 .groupSearchFilter("(member={0})")
                 .contextSource()
                 .url("ldap://regions.office.np-ivc.ru:389")
-                .managerDn("CN=ldap_user_ro,OU=Service,OU=Users,OU=nsk,DC=regions,DC=office,DC=np-ivc,DC=ru")
+                .managerDn("CN=ldap_user_ro,OU=Service,OU=Users,OU=nsk,OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru")
                 .managerPassword("i8wx6NzLssM4");
     }
 }
