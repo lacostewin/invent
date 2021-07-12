@@ -11,8 +11,8 @@ public class AuthenticatingLdapApplication {
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(DataSize.parse("128KB"));
-        factory.setMaxRequestSize(DataSize.parse("128KB"));
+        factory.setMaxFileSize(DataSize.parse("256KB"));
+        factory.setMaxRequestSize(DataSize.parse("256KB"));
         return factory.createMultipartConfig();
     }
 

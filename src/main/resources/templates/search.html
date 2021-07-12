@@ -57,13 +57,21 @@
                     <input type="hidden" name="invid" th:value="${mess.invid}"/>
                     <input type="hidden" name="author" th:value="${greet}"/>
                 </form>
-                <form action="#" th:action="@{/hist}" method="post" name="hist">
-                    <input type="submit" value="H" style="margin-left: 20px;"/>
+                <form target="_blank" action="#" th:action="@{/hist}" method="post" name="hist">
+                    <input type="submit" value="H" style="margin-left: 20px;" title="Просмостреть историю перемещения ТМЦ."/>
                     <input type="hidden" name="id" th:value="${mess.id}"/>
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
                     <input type="hidden" name="text" th:value="${mess.text}"/>
                     <input type="hidden" name="invid" th:value="${mess.invid}"/>
                     <input type="hidden" th:each="jour : ${journal}" th:value="${jour.newowner}"/>
+                </form>
+
+                <form target="_blank" action="#" th:action="@{/qrcode}" method="post" name="qrcode">
+                    <input type="submit" value="QR" style="margin-left: 20px;" title="Просмостреть QR код."/>
+                    <input type="hidden" name="id" th:value="${mess.id}"/>
+                    <input type="hidden" name="sn" th:value="${mess.sn}"/>
+                    <input type="hidden" name="text" th:value="${mess.text}"/>
+                    <input type="hidden" name="invid" th:value="${mess.invid}"/>
                 </form>
             </td>
             <td th:text="${mess.author}"><i></i></td>

@@ -1,7 +1,11 @@
 package com.example.webapp.controller;
+
+import com.example.webapp.config.GenerateQRCode;
 import com.example.webapp.config.LdapSearch;
 import com.example.webapp.domain.*;
 import com.example.webapp.repos.*;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
@@ -35,7 +39,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Controller
-public class MainController {
+public class MainController extends GenerateQRCode {
     @Autowired
     private MessageModify messageModify;
     @Autowired
@@ -45,6 +49,8 @@ public class MainController {
     private JournalAdd journalAdd;
     @Autowired
     private JournalFind journalFind;
+    @Autowired
+    private QRModify qrModify;
 
     public MainController() {
     }
@@ -142,13 +148,9 @@ public class MainController {
                                 footer.setBorder(com.lowagie.text.Rectangle.NO_BORDER);
                                 document.setFooter(footer);
 
-
                                 document.left(100f);
                                 document.top(150f);
                                 document.open();
-
-//                                document.add(new Paragraph("Инвентаризационная ведомость №            от " + formatter.format(date) + " г.", font));
-
 
                                 PdfPTable table = new PdfPTable(4);
                                 table.setWidthPercentage(100);
@@ -281,7 +283,6 @@ public class MainController {
         List<String> list = app.getAllPersonNames();
         model.put("list", list);
         Pageable limit = PageRequest.of(0,10);
-
         Iterable<Message> messages = messageRepo.findAll(limit);
         model.put("messages", messages);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -357,6 +358,30 @@ public class MainController {
         return "hist";
     }
 
+    // Формирование QR кода из строки в БД и вывод на страницу
+    @PostMapping("/qrcode")
+    public String qrcode(@RequestParam Long id,
+                         @RequestParam String sn,
+                         @RequestParam String text,
+                         @RequestParam String invid,
+                         Map<String, Object> model) throws IOException, WriterException {
+        if (messageRepo.selectQrcodeById(id) != null & ParamsQRCode(text, invid, sn).toString("X", " ").equals(messageRepo.selectQrcodeById(id))) {
+            BitMatrix qrm = BitMatrix.parse(messageRepo.selectQrcodeById(id), "X", " ");
+            Message messages = new Message (id, sn, text, invid);
+            model.put("messages", messages);
+            String imageString = createQRImage(text, invid, qrm);
+            model.put("qr64", imageString);
+            } else {
+                qrModify.setQRCodeFor(ParamsQRCode(text, invid, sn).toString("X", " "), id);
+                BitMatrix qrm = BitMatrix.parse(messageRepo.selectQrcodeById(id), "X", " ");
+                Message messages = new Message (id, sn, text, invid);
+                model.put("messages", messages);
+                String imageString = createQRImage(text, invid, qrm);
+                model.put("qr64", imageString);
+        }
+        return "qrcode";
+    }
+
 // Редактирование владельца ТМЦ путём выбора list из списка основная форма
     @Autowired
     private JavaMailSender javaMailSender;
@@ -376,9 +401,7 @@ public class MainController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
-
         Pageable limit = PageRequest.of(0,10);
-
         Iterable<Message> messagess = messageRepo.findAll(limit);
         Optional<Message> ch = messageRepo.findById(id);
         String ch2 = ch.get().getOwner();
@@ -494,8 +517,8 @@ public class MainController {
             @RequestParam String text,
             @RequestParam String sn,
             @RequestParam String invid,
-            @RequestParam String author, Map<String, Object> model) {
-        Message message = new Message (text, sn, owner, author, invid);
+            @RequestParam String author, Map<String, Object> model) throws IOException, WriterException {
+        Message message = new Message (text, sn, owner, author, invid, ParamsQRCode(text, invid, sn).toString("X", " "));
         if (text != null && !text.isEmpty() & owner != null && !owner.isEmpty() & invid != null && !invid.isEmpty()) {
             if (!text.matches("^[0-9].*$")) {
                 if (!messageRepo.existsMessageByInvidIgnoreCase(invid)) {
@@ -578,7 +601,7 @@ public String remove (@RequestParam Long id,
 
                         String headerKey = "Content-Disposition";
                         for (Message messs : messag) {
-                            String filenames = "Cписаниe ТМЦ инв. №" + messs.getInvid() + " от " + formatter.format(date) + ".pdf";
+                            String filenames = "Cписаниe ТМЦ инв. № " + messs.getInvid() + " от " + formatter.format(date) + ".pdf";
                             ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
                                     .filename(filenames, StandardCharsets.UTF_8)
                                     .build();
@@ -601,7 +624,6 @@ public String remove (@RequestParam Long id,
                         document.left(100f);
                         document.top(150f);
                         document.open();
-
 
                         PdfPTable table = new PdfPTable(3);
                         table.setWidthPercentage(100);
@@ -671,7 +693,6 @@ public String remove (@RequestParam Long id,
                         journalFind.deleteByMessageid(id);
                         model.put("messages", messagedel);
                         return "main.html";
-
                     } else {
                         LdapSearch app = new LdapSearch();
                         List<String> list = app.getAllPersonNames();
@@ -683,7 +704,6 @@ public String remove (@RequestParam Long id,
                         model.put("error", "Этот сертификат выдан не Вам!");
                         return "main.html";
                     }
-
                 } else {
                     LdapSearch app = new LdapSearch();
                     List<String> list = app.getAllPersonNames();

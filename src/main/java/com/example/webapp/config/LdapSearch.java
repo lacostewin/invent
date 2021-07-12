@@ -27,9 +27,7 @@ public class LdapSearch {
         NamingEnumeration results = null;
         try {
             SearchControls controls = new SearchControls();
-            String[] attrIDs = {"displayName"};
             controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            controls.setReturningAttributes(attrIDs) ;
             results = ctx.search("OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru","(&(objectClass=user)(!(objectCategory=computer)))", controls);
 
             while (results.hasMore()) {

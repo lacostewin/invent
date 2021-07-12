@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css.css">
+  <title>QR код ТМЦ</title>
+</head>
+<body>
+<p th:each="qr : ${qr64}" align="center">
+<img th:src="${qr}" title="Нажми чтобы распечатать." onclick="showMessage()"/>
+</p>
+<script>
+function showMessage() {
+  window.print()
+}
+</script>
+<p th:each="mess : ${messages}" align="center">
+  <font size="0.5" th:text="${mess.text}"></font>
+  <font size="0.5" th:text="${mess.invid}"></font>
+  <font size="0.5" th:text="${mess.sn}"></font>
+</p>
+</body>
+</html>
