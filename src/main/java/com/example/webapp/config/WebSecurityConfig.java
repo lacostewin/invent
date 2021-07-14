@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-// Доменная авторизация контроллером Spring и назначение прав достпа в страницам
+// Доменная авторизация контроллером Spring и назначение прав достпа к страницам
 @Configuration
 @EnableAutoConfiguration
 @EnableWebSecurity
@@ -16,24 +16,30 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception  {
         http
                 .authorizeRequests()
-                .antMatchers("/logout/**", "/logout-success", "/login/**", "/static/**").permitAll()
+                .antMatchers("/logout/**", "/logout-success", "/login/**", "/static/**", "/**.png").permitAll()
                 .antMatchers("/main").hasRole("INVENTADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
                 .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
                 .and()
-                .logout().permitAll()
+                .logout()
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/403");
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception {
-
         authBuilder
                 .ldapAuthentication()
                 .userSearchFilter("(&(objectClass=person)(objectClass=user)(sAMAccountName={0})(|(memberOf=CN=inventadmin,OU=inventorization,OU=Groups,OU=nsk,OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru)(memberOf=CN=inventuser,OU=inventorization,OU=Groups,OU=nsk,OU=All,DC=regions,DC=office,DC=np-ivc,DC=ru)))")

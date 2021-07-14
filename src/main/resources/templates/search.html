@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css.css">
-    <title>Инвентаризация PM&HM</title>
+    <title>Поиск ТМЦ</title>
     <script th:src="sorttable.js"></script>
 </head>
 <body>
@@ -19,7 +19,7 @@
 <div class="navi">
 <a sec:authorize="hasRole('ROLE_INVENTADMIN')" href="/main">Добавить ТМЦ</a><a style="padding-left:4.00em;" href="/">Мои ТМЦ</a>
 </div>
-<h3>Найти ТМЦ:</h3>
+<h3>Поиск ТМЦ:</h3>
 <div id="er" th:if="${error}">
     <div id="popup">
         <strong style="color: rgb(20, 85, 162);" th:each="err : ${error}" th:text="${err}"></strong>
@@ -27,7 +27,7 @@
     </div>
 </div>
 <form method="post" th:action="@{/search}" style="margin-left: 10px;">
-    <input type="text" name="searchsn" autofocus maxlength = "30" th:value="${ssn}" placeholder="Серийный номер или наименование" size="30">
+    <input type="search" name="searchsn" autofocus maxlength = "30" th:value="${ssn}" placeholder="Серийный номер или наименование" size="30"/>
     <button type="submit">Найти</button>
 </form>
 </div>

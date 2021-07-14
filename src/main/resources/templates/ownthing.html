@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css.css">
-    <title>Инвентаризация PM&HM</title>
+    <title>Ваши ТМЦ</title>
 </head>
 <body>
 <div class="menu">
@@ -15,15 +15,18 @@
         <input type="submit" value="Выйти"/>
     </form>
 </div>
-    <a sec:authorize="hasRole('ROLE_INVENTADMIN')" href="/main">Добавить ТМЦ</a><a style="padding-left:4.00em;" href="/search">Поиск ТМЦ</a>
+<div class="navi">
+        <a sec:authorize="hasRole('ROLE_INVENTADMIN')" href="/main">Добавить ТМЦ</a><a style="padding-left:4.00em;" href="/search">Поиск ТМЦ</a>
+</div>
+<h3 style="margin-bottom: 23px;">Список ТМЦ закреплённых за Вами:</h3>
 <div id="er" th:if="${error}">
     <div id="popup">
     <strong style="color: rgb(20, 85, 162);" th:each="err : ${error}" th:text="${err}"></strong>
     <p style="cursor: pointer;" onclick="document.getElementById('er').style.display='none';" >Закрыть</p>
     </div>
 </div>
-<h3>Список ТМЦ закреплённых за Вами:</h3>
 </div>
+
 <div class="content">
 <table class="sortable">
     <thead>

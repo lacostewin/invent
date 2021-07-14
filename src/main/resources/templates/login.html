@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css.css">
+    <title>Иинвентаризация PM&HM</title>
+    <style>
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+            }
+
+        input {
+                border: 1px solid #0869c5;
+                border-radius: 15px;
+                -webkit-border-radius: 15px;
+                -moz-border-radius: 15px;
+                -khtml-border-radius: 15px;
+                background: #ffffff !important;
+                outline: none;
+                height: 35px;
+                width: 200px;
+                color: black;
+                font-size: 16px;
+                font-family: Tahoma;
+                }
+    </style>
+</head>
+<body>
+<div class="logo" style="text-align: center">
+    <div style="font-size: 30px; color: #1c6ab2;">Инвентаризация</div>
+    <img src="/pmhm.png" />
+    <p></p>
+<form th:action="@{/login}" method="post">
+    <div class="input"><input type="text" autofocus name="username" placeholder="Пользователь"/>
+    <p></p>
+    <input type="password" name="password" placeholder="Пароль"/>
+    </div>
+    <p></p>
+    <div class="subm"><input type="submit" value="Войти"/></div>
+</form>
+    <div th:if="${param.error}" style="color: red">
+        Ошибка в пользователе или пароле.
+    </div>
+    <div th:if="${param.logout}" style="color: red">
+        Выход удался.
+    </div>
+</div>
+</body>
+</html>

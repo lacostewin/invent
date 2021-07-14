@@ -11,5 +11,5 @@ import java.util.List;
 
 public interface JournalFind extends CrudRepository<Journal, Long> {
     List<Journal> findByMessageid(Long messageid);
-    List<Journal> deleteByMessageid(Long messageid);
+    void deleteByMessageid(Long messageid);
 }

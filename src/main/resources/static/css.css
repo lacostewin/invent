@@ -9,6 +9,10 @@ body {
     min-width: 680px;
 }
 
+.logo {
+    text-align: center
+}
+
 #er {
   background: #000;
   height: 100%;
