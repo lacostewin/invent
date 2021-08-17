@@ -26,7 +26,7 @@
         <p style="cursor: pointer;" onclick="document.getElementById('er').style.display='none';" >Закрыть</p>
     </div>
 </div>
-<form method="post" th:action="@{/search}" style="margin-left: 10px;">
+<form method="get" th:action="@{/find}" style="margin-left: 10px;">
     <input type="search" name="searchsn" autofocus maxlength = "30" th:value="${ssn}" placeholder="Серийный номер или наименование" size="30"/>
     <button type="submit">Найти</button>
 </form>
@@ -40,11 +40,11 @@
     </thead>
     <tbody>
         <tr th:each="mess : ${messages}">
-            <td th:text="${mess.id}"></td>
-            <td th:text="${mess.text}"><span></span></td>
-            <td th:text="${mess.invid}"></td>
-            <td th:text="${mess.sn}"><i></i></td>
-            <td style="display: flex; padding-bottom: 0; padding-top: 7px;">
+            <td name="id" th:text="${mess.id}"></td>
+            <td name="text" th:text="${mess.text}"><span></span></td>
+            <td name="invid" th:text="${mess.invid}"></td>
+            <td name="sn" th:text="${mess.sn}"><i></i></td>
+            <td name="owner" style="display: flex; padding-bottom: 0; padding-top: 7px;">
                 <form action="#" th:action="@{/updates}" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
                     <select name="owner" >
                         <option selected th:text="${mess.owner}"></option>

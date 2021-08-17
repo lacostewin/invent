@@ -22,13 +22,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.LdapUserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.Rectangle;
@@ -315,7 +311,7 @@ public class MainController extends GenerateQRCode {
 
 
     // Поиск по серийному номеру, названию ТМЦ и владельцу.
-    @PostMapping("/search")
+    @GetMapping("/find")
     public String search (String searchsn, Map<String, Object> model) {
         Streamable<Message> messages;
         if (searchsn != null && !searchsn.isEmpty()) {

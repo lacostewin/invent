@@ -18,7 +18,7 @@ import java.util.Hashtable;
 public class GenerateQRCode  {
     public static BitMatrix ParamsQRCode(String text, String invid, String sn) throws WriterException, IOException {
         int size = 200;
-        String qrCodeText = new String(("ТМЦ: " + text + "\n" + "Инв. №: " + invid + "\n" + "SN: " + sn + "\n" + "\n\n http://invent.regions.office.np-ivc.ru").getBytes(StandardCharsets.UTF_8), "ISO-8859-1");
+        String qrCodeText = new String(("ТМЦ: " + text + "\n" + "Инв. №: " + invid + "\n" + "SN: " + sn + "\n" + "\n\nhttp://invent.regions.office.np-ivc.ru/find?searchsn=" + invid).getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
