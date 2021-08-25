@@ -97,8 +97,7 @@ public class MainController extends GenerateQRCode {
 
     //  Прохождение инвентаризации своих ТМЦ
     @PostMapping("/")
-    public String confirms (
-            @RequestParam(name = "checkboxName", required = false)
+    public String confirms (@RequestParam(name = "checkboxName", required = false)
                     String[] checkboxValue, String[] checkboxId, Long id, String invid,
                     Map<String, Object> model, MultipartFile file, HttpServletResponse remform) throws DocumentException, IOException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -333,7 +332,6 @@ public class MainController extends GenerateQRCode {
             LdapSearch app = new LdapSearch();
             List<String> list = app.getAllPersonNames();
             model.put("list", list);
-            Pageable limit = PageRequest.of(0,10);
             Iterable<Message> messages2 = messageRepo.findAll();
             model.put("message", messages2);
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
