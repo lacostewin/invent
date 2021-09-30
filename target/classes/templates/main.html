@@ -8,7 +8,7 @@
     <title>Инвентаризация PM&HM</title>
 </head>
 <body>
-
+<div class="menu">
 <div class="greetings">
     <p th:each="grt : ${greet}">Вы вошли как <strong th:text="${grt}"></strong></p>
     <form th:action="@{/logout}" method="post">
@@ -19,8 +19,6 @@
 <a href="/search">Поиск ТМЦ</a><a style="padding-left:4.00em;" href="/">Мои ТМЦ</a>
 </div>
 <h3>Добавить ТМЦ:</h3>
-<div ></div>
-
 <div id="er" th:if="${error}">
     <div id="popup">
         <strong style="color: rgb(20, 85, 162);" th:each="err : ${error}" th:text="${err}"></strong>
@@ -28,7 +26,6 @@
     </div>
 </div>
 
-<div>
     <form th:action="@{/main}" method="post">
         <input type="text" name="text" autofocus placeholder="Наименование" />
         <input type="text" name="invid" placeholder="Инвентарный номер" />
@@ -39,13 +36,13 @@
         </select></td>
         <button type="submit">Записать!</button>
     </form>
+
 </div>
-</br>
-<div>Список ТМЦ:</div>
-<table class="tmc">
+<div class="content">
+<table class="sortable">
     <thead>
     <tr>
-        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Владелец</th><th>Автор</th>
+        <th>ID</th><th>Наименование</th><th>Инв. №</th><th>Сер. №</th><th>Владелец</th><th>Автор</th><th></th>
     </tr>
     </thead>
     <tbody>
@@ -54,7 +51,7 @@
             <td th:text="${mess.text}"><span></span></td>
             <td th:text="${mess.invid}"></td>
             <td th:text="${mess.sn}"><i></i></td>
-            <td>
+            <td style="display: flex; padding-bottom: 0; padding-top: 7px;">
                 <form action="#" th:action="@{/update}" method="post" name="update" onsubmit="return confirm('Вы действительно хотите изменить владельца?');">
                     <select name="owner" >
                         <option selected th:text="${mess.owner}"></option>
@@ -68,7 +65,6 @@
                     <input type="hidden" name="author" th:value="${greet}"/>
                 </form>
             </td>
-
             <td th:text="${mess.author}"><i></i></td>
             <td>
                 <form th:action="@{/remove}" method="post" name="remove" th:snd="${mess.sn}"
@@ -76,9 +72,9 @@
                       enctype="multipart/form-data" >
 
                     <label >
-                        <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
+                        <img src="/crt.png" title="Выбрать файл сертификата" style='vertical-align: sub; margin-left: auto; margin-right: auto;' />
                         <input type="file" name="file" accept="application/pkix-cert" style="display:none" />
-                        <input type="submit" value="Удалить" style='display: block; margin-left: auto; margin-right: auto;'/>
+                        <input type="submit" value="Удалить" style='vertical-align: super; margin-left: auto; margin-right: auto;'/>
                     </label>
 
                     <input type="hidden" name="sn" th:value="${mess.sn}"/>
@@ -91,5 +87,6 @@
         </tr>
     </tbody>
 </table>
+</div>
 </body>
 </html>

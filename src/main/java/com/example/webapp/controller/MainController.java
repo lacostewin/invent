@@ -20,7 +20,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -51,6 +51,8 @@ public class MainController extends GenerateQRCode {
     private JournalFind journalFind;
     @Autowired
     private QRModify qrModify;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     public MainController() {
     }
@@ -63,6 +65,21 @@ public class MainController extends GenerateQRCode {
         return "403";
     }
 
+    public void defaultMethodStream(Map<String, Object> model, Streamable<Message> messages, String ownerth) {
+        LdapSearch app = new LdapSearch();
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
+        model.put("messages", messages);
+        model.put("greet", ownerth);
+    }
+
+    public void defaultMethodIter(Map<String, Object> model, Iterable<Message> messages, String ownerth) {
+        LdapSearch app = new LdapSearch();
+        List<String> list = app.getAllPersonNames();
+        model.put("list", list);
+        model.put("messages", messages);
+        model.put("greet", ownerth);
+    }
 
 //  Проверяем на принадлежность к группе и деректим на page где все ТМЦ закреплённые за аутентифицированным сотрудником
     @GetMapping("/")
@@ -70,8 +87,8 @@ public class MainController extends GenerateQRCode {
         Streamable<Message> messages;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_INVENTUSER"))) {
-            Object sAMAccountName = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String sAMAccName = ((UserDetails) sAMAccountName).getUsername();
+//            Object sAMAccountName = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            String sAMAccName = ((UserDetails) sAMAccountName).getUsername();
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = ((LdapUserDetails) principal).getDn();
             String ownerth = username.split("\\,")[0].split("=")[1];
@@ -81,8 +98,8 @@ public class MainController extends GenerateQRCode {
             return "ownthing.html";
         } else {
             if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_INVENTADMIN"))) {
-                Object sAMAccountName = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                String sAMAccName = ((UserDetails) sAMAccountName).getUsername();
+//                Object sAMAccountName = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//                String sAMAccName = ((UserDetails) sAMAccountName).getUsername();
                 Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 String username = ((LdapUserDetails) principal).getDn();
                 String ownerth = username.split("\\,")[0].split("=")[1];
@@ -95,11 +112,18 @@ public class MainController extends GenerateQRCode {
         return "ownthing.html";
     }
 
-    //  Прохождение инвентаризации своих ТМЦ
+//  Прохождение инвентаризации своих ТМЦ
     @PostMapping("/")
     public String confirms (@RequestParam(name = "checkboxName", required = false)
-                    String[] checkboxValue, String[] checkboxId, Long id, String invid,
-                    Map<String, Object> model, MultipartFile file, HttpServletResponse remform) throws DocumentException, IOException {
+                            String[] checkboxValue,
+                            String invid,
+                            String subject,
+                            String issuer,
+                            String from,
+                            String till,
+                            String certsn,
+                            Map<String, Object> model,
+                            HttpServletResponse remform) throws DocumentException, IOException, ParseException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
@@ -107,13 +131,11 @@ public class MainController extends GenerateQRCode {
         messages = messageRepo.findByOwner(ownerth);
 
         if (checkboxValue != null && checkboxValue.length == messages.stream().count()) {
-            try {
-                if (!file.isEmpty()) {
-                    CertificateFactory fac = CertificateFactory.getInstance("X509");
-                    X509Certificate cert = (X509Certificate) fac.generateCertificate(file.getInputStream());
-                    if (cert.getIssuerX500Principal().toString().split("\\,")[0].split("=")[1].equals(CA)) {
-                        if (System.currentTimeMillis() < cert.getNotAfter().getTime()) {
-                            if (cert.getSubjectDN().toString().split("\\,")[1].split("=")[1].equals(ownerth)) {
+            if (issuer != null && !issuer.equals("0")) {
+              if (issuer.split("=")[1].equals(CA)) {
+                Date certdate = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(till);
+                if (System.currentTimeMillis() < certdate.getTime()) {
+                    if (subject.split("=")[1].equals(ownerth)) {
                                 SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
                                 Date date = new Date(System.currentTimeMillis());
                                 Streamable<Message> messag;
@@ -182,7 +204,7 @@ public class MainController extends GenerateQRCode {
                                 cb.roundRectangle(
                                         rect.x + 200f,
                                         rect.y + 60f,
-                                        rect.width + 465,
+                                        rect.width + 480,
                                         rect.height - 55, -10
                                 );
 
@@ -195,15 +217,13 @@ public class MainController extends GenerateQRCode {
                                 ct1.addElement(new Paragraph("Документ подписан\nэлектронной подписью", fontsignb));
                                 ColumnText ct2 = new ColumnText(cb);
                                 ct2.setSimpleColumn(410, -10, 800, 60);
-                                ct2.addElement(new Paragraph("Владелец: " + cert.getSubjectDN().toString().split("\\,")[1].split("=")[1], fontsignbb));
+                                ct2.addElement(new Paragraph("Владелец: " + subject.split("=")[1], fontsignbb));
                                 ColumnText ct3 = new ColumnText(cb);
                                 ct3.setSimpleColumn(410, -25, 800, 42);
-                                ct3.addElement(new Paragraph("Сертификат: " + cert.getSerialNumber().toString(16), fontsignn));
+                                ct3.addElement(new Paragraph("Сертификат: " + certsn, fontsignn));
                                 ColumnText ct4 = new ColumnText(cb);
                                 ct4.setSimpleColumn(410, -30, 800, 28);
-                                Date notBefore = cert.getNotBefore();
-                                Date notAfter = cert.getNotAfter();
-                                ct4.addElement(new Paragraph("Действителен с : " + formatter.format(notBefore) + " по " + formatter.format(notAfter), fontsignn));
+                                ct4.addElement(new Paragraph("Действителен с : " + from + " по " + till, fontsignn));
                                 ColumnText ct5 = new ColumnText(cb);
                                 ct5.setSimpleColumn(209, -10, 410, 48);
                                 ct5.addElement(image);
@@ -222,51 +242,26 @@ public class MainController extends GenerateQRCode {
                                 model.put("messages", messages);
                                 return "ownthing.html";
                             } else {
-                                LdapSearch app = new LdapSearch();
-                                List<String> list = app.getAllPersonNames();
-                                model.put("list", list);
-                                model.put("messages", messages);
-                                model.put("greet", ownerth);
+                                defaultMethodStream(model, messages, ownerth);
                                 model.put("error", "Этот сертификат выдан не Вам!");
                                 return "ownthing.html";
                             }
                         } else {
-                            LdapSearch app = new LdapSearch();
-                            List<String> list = app.getAllPersonNames();
-                            model.put("list", list);
-                            model.put("messages", messages);
-                            model.put("greet", ownerth);
+                            defaultMethodStream(model, messages, ownerth);
                             model.put("error", "Сертификат просрочен!");
                             return "ownthing.html";
                         }
                     } else {
-                        LdapSearch app = new LdapSearch();
-                        List<String> list = app.getAllPersonNames();
-                        model.put("list", list);
-                        model.put("messages", messages);
-                        model.put("greet", ownerth);
-                        model.put("error", "Сертификат выдан другой организацией!");
+                        defaultMethodStream(model, messages, ownerth);
+                        model.put("error", "Сертификат выдан другой организацией или не выбран!");
                         return "ownthing.html";
                     }
-                } else {
-                    LdapSearch app = new LdapSearch();
-                    List<String> list = app.getAllPersonNames();
-                    model.put("list", list);
-                    model.put("messages", messages);
-                    model.put("greet", ownerth);
-                    model.put("error", "Сертификат не выбран.");
-                    return "ownthing.html";
-                }
-            } catch (CertificateException e) {
-                LdapSearch app = new LdapSearch();
-                List<String> list = app.getAllPersonNames();
-                model.put("list", list);
-                model.put("messages", messages);
-                model.put("greet", ownerth);
-                model.put("error", "Выбран не сертификат.");
+            } else {
+                defaultMethodStream(model, messages, ownerth);
+                model.put("error", "Сертификат не выбран!");
                 return "ownthing.html";
             }
-        } else{
+        } else {
              messages = messageRepo.findByOwner(ownerth);
              model.put("messages", messages);
              model.put("greet", ownerth);
@@ -275,41 +270,43 @@ public class MainController extends GenerateQRCode {
          }
     }
 
-    // Выводим все ТМЦ на страницу
+// Выводим все ТМЦ на страницу
     @GetMapping("/main")
     public String main (Map <String, Object> model) {
-        LdapSearch app = new LdapSearch();
-        List<String> list = app.getAllPersonNames();
-        model.put("list", list);
+//        LdapSearch app = new LdapSearch();
+//        List<String> list = app.getAllPersonNames();
+//        model.put("list", list);
         Pageable limit = PageRequest.of(0,10);
         Iterable<Message> messages = messageRepo.findAll(limit);
-        model.put("messages", messages);
+//        model.put("messages", messages);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
-        model.put("greet", ownerth);
+//        model.put("greet", ownerth);
+        defaultMethodIter(model, messages, ownerth);
         return "main";
     }
 
-    // Выводим все ТМЦ на страницу поиска
+// Выводим все ТМЦ на страницу поиска
     @GetMapping("/search")
     public String search2 (String searchsn, Map<String, Object> model) {
-        LdapSearch app = new LdapSearch();
-        List<String> list = app.getAllPersonNames();
-        model.put("list", list);
+//        LdapSearch app = new LdapSearch();
+//        List<String> list = app.getAllPersonNames();
+//        model.put("list", list);
         Pageable limit = PageRequest.of(0,10);
         Iterable<Message> messages = messageRepo.findAll(limit);
-        model.put("messages", messages);
+//        model.put("messages", messages);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
-        model.put("greet", ownerth);
+//        model.put("greet", ownerth);
+        defaultMethodIter(model, messages, ownerth);
         model.put("ssn", searchsn);
         return "search";
     }
 
 
-    // Поиск по серийному номеру, названию ТМЦ и владельцу.
+// Поиск по серийному номеру, названию ТМЦ и владельцу.
     @GetMapping("/find")
     public String search (String searchsn, Map<String, Object> model) {
         Streamable<Message> messages;
@@ -318,14 +315,15 @@ public class MainController extends GenerateQRCode {
                     .and(messageRepo.findByTextContainingIgnoreCase(searchsn))
                     .and(messageRepo.findByOwnerContainingIgnoreCase(searchsn))
                     .and(messageRepo.findByInvidContainingIgnoreCase(searchsn));
-            LdapSearch app = new LdapSearch();
-            List<String> list = app.getAllPersonNames();
-            model.put("list", list);
-            model.put("messages", messages);
+//            LdapSearch app = new LdapSearch();
+//            List<String> list = app.getAllPersonNames();
+//            model.put("list", list);
+//            model.put("messages", messages);
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = ((LdapUserDetails) principal).getDn();
             String ownerth = username.split("\\,")[0].split("=")[1];
-            model.put("greet", ownerth);
+//            model.put("greet", ownerth);
+            defaultMethodStream(model, messages, ownerth);
             model.put("ssn", searchsn);
             return "search";
         } else {
@@ -381,8 +379,6 @@ public class MainController extends GenerateQRCode {
     }
 
 // Редактирование владельца ТМЦ путём выбора list из списка основная форма
-    @Autowired
-    private JavaMailSender javaMailSender;
     @PostMapping("/update")
     public String modifyowner (
             @RequestParam String owner,
@@ -393,14 +389,14 @@ public class MainController extends GenerateQRCode {
             @RequestParam String author,
             Map<String, Object> model) {
         Journal journal = new Journal();
-        Message messages = new Message(owner, id, sn, text, author, invid);
-        LdapSearch app = new LdapSearch();
-        List<String> list = app.getAllPersonNames();
+        Message messagess = new Message(owner, id, sn, text, author, invid);
+//        LdapSearch app = new LdapSearch();
+//        List<String> list = app.getAllPersonNames();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
         Pageable limit = PageRequest.of(0,10);
-        Iterable<Message> messagess = messageRepo.findAll(limit);
+        Iterable<Message> messages = messageRepo.findAll(limit);
         Optional<Message> ch = messageRepo.findById(id);
         String ch2 = ch.get().getOwner();
         if (!owner.equals(ch2)) {
@@ -409,10 +405,11 @@ public class MainController extends GenerateQRCode {
             journal.setAuthor(author);
             journal.setDate(Calendar.getInstance().getTime());
             journalAdd.save(journal);
-            messageModify.save(messages);
-            model.put("messages", messagess);
-            model.put("greet", ownerth);
-            model.put("list", list);
+            messageModify.save(messagess);
+//            model.put("messages", messages);
+//            model.put("greet", ownerth);
+//            model.put("list", list);
+            defaultMethodIter(model, messages, ownerth);
 
             SimpleMailMessage msg = new SimpleMailMessage();
             try {
@@ -434,14 +431,15 @@ public class MainController extends GenerateQRCode {
             } catch (MailSendException e) {
                 System.out.println("Параметр 'setTo' не указан!");
             }
-
             return "main";
-        } else
+        } else {
             model.put("error", "Владельцы совпадают!");
-            model.put("list", list);
-            model.put("messages", messagess);
-            model.put("greet", ownerth);
+//            model.put("list", list);
+//            model.put("messages", messagess);
+//            model.put("greet", ownerth);
+            defaultMethodIter(model, messages, ownerth);
             return "main.html";
+        }
     }
 
 
@@ -456,16 +454,21 @@ public class MainController extends GenerateQRCode {
             @RequestParam String author,
             Map<String, Object> model) {
         Journal journal = new Journal();
-        Message messages = new Message (owner, id, sn, text, author, invid);
-        LdapSearch app = new LdapSearch();
-        List<String> list = app.getAllPersonNames();
+        Message messagess = new Message (owner, id, sn, text, author, invid);
+
+//        LdapSearch app = new LdapSearch();
+//        List<String> list = app.getAllPersonNames();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((LdapUserDetails) principal).getDn();
         String ownerth = username.split("\\,")[0].split("=")[1];
-        Optional<Message> ch = messageRepo.findById(id);
+
 
         Pageable limit = PageRequest.of(0,10);
-        Iterable<Message> messagess = messageRepo.findAll(limit);
+        Iterable<Message> messages = messageRepo.findAll(limit);
+
+
+
+        Optional<Message> ch = messageRepo.findById(id);
         String ch2 = ch.get().getOwner();
         if (!owner.equals(ch2)) {
             journal.setMessageid(id);
@@ -473,10 +476,11 @@ public class MainController extends GenerateQRCode {
             journal.setAuthor(author);
             journal.setDate(Calendar.getInstance().getTime());
             journalAdd.save(journal);
-            messageModify.save(messages);
-            model.put("messages", messages);
-            model.put("list", list);
-            model.put("greet", ownerth);
+            messageModify.save(messagess);
+//            model.put("messages", messages);
+//            model.put("list", list);
+//            model.put("greet", ownerth);
+            defaultMethodIter(model, messages, ownerth);
 
             SimpleMailMessage msg = new SimpleMailMessage();
             try {
@@ -498,14 +502,15 @@ public class MainController extends GenerateQRCode {
             } catch (MailSendException e) {
                 System.out.println("Параметр 'setTo' не указан!");
             }
-
             return "redirect:/search";
-        } else
-        model.put("error", "Владельцы совпадают!");
-        model.put("list", list);
-        model.put("messages", messagess);
-        model.put("greet", ownerth);
-        return "search";
+        } else {
+            model.put("error", "Владельцы совпадают!");
+//            model.put("list", list);
+//            model.put("messages", messagess);
+//            model.put("greet", ownerth);
+            defaultMethodIter(model, messages, ownerth);
+            return "search";
+        }
     }
 
 // Проверка на корректность заполненния полей описания ТМЦ и добавление ТМЦ.
@@ -692,57 +697,62 @@ public String remove (@RequestParam Long id,
                         model.put("messages", messagedel);
                         return "main.html";
                     } else {
-                        LdapSearch app = new LdapSearch();
-                        List<String> list = app.getAllPersonNames();
-                        model.put("list", list);
+//                        LdapSearch app = new LdapSearch();
+//                        List<String> list = app.getAllPersonNames();
+//                        model.put("list", list);
                         Pageable limit = PageRequest.of(0,10);
                         Iterable<Message> messages = messageRepo.findAll(limit);
-                        model.put("messages", messages);
-                        model.put("greet", ownerth);
+//                        model.put("messages", messages);
+//                        model.put("greet", ownerth);
+                        defaultMethodIter(model, messages, ownerth);
                         model.put("error", "Этот сертификат выдан не Вам!");
                         return "main.html";
                     }
                 } else {
-                    LdapSearch app = new LdapSearch();
-                    List<String> list = app.getAllPersonNames();
-                    model.put("list", list);
+//                    LdapSearch app = new LdapSearch();
+//                    List<String> list = app.getAllPersonNames();
+//                    model.put("list", list);
                     Pageable limit = PageRequest.of(0,10);
                     Iterable<Message> messages = messageRepo.findAll(limit);
-                    model.put("messages", messages);
-                    model.put("greet", ownerth);
+//                    model.put("messages", messages);
+//                    model.put("greet", ownerth);
+                    defaultMethodIter(model, messages, ownerth);
                     model.put("error", "Сертификат просрочен!");
                     return "main.html";
                 }
             } else {
-                LdapSearch app = new LdapSearch();
-                List<String> list = app.getAllPersonNames();
-                model.put("list", list);
+//                LdapSearch app = new LdapSearch();
+//                List<String> list = app.getAllPersonNames();
+//                model.put("list", list);
                 Pageable limit = PageRequest.of(0,10);
                 Iterable<Message> messages = messageRepo.findAll(limit);
-                model.put("messages", messages);
-                model.put("greet", ownerth);
+//                model.put("messages", messages);
+//                model.put("greet", ownerth);
+                defaultMethodIter(model, messages, ownerth);
                 model.put("error", "Сертификат выдан другой организацией!");
                 return "main.html";
             }
         } else {
-            LdapSearch app = new LdapSearch();
-            List<String> list = app.getAllPersonNames();
-            model.put("list", list);
+//            LdapSearch app = new LdapSearch();
+//            List<String> list = app.getAllPersonNames();
+//            model.put("list", list);
             Pageable limit = PageRequest.of(0,10);
             Iterable<Message> messages = messageRepo.findAll(limit);
-            model.put("messages", messages);
-            model.put("greet", ownerth);
+//            model.put("messages", messages);
+//            model.put("greet", ownerth);
+            defaultMethodIter(model, messages, ownerth);
             model.put("error", "Сертификат не выбран.");
             return "main.html";
         }
     } catch (CertificateException e) {
-        LdapSearch app = new LdapSearch();
-        List<String> list = app.getAllPersonNames();
-        model.put("list", list);
+//        LdapSearch app = new LdapSearch();
+//        List<String> list = app.getAllPersonNames();
+//        model.put("list", list);
         Pageable limit = PageRequest.of(0,10);
         Iterable<Message> messages = messageRepo.findAll(limit);
-        model.put("messages", messages);
-        model.put("greet", ownerth);
+//        model.put("messages", messages);
+//        model.put("greet", ownerth);
+        defaultMethodIter(model, messages, ownerth);
         model.put("error", "Выбран не сертификат.");
         return "main.html";
     }
@@ -874,58 +884,63 @@ public String remove (@RequestParam Long id,
                         return "search.html";
 
                         } else {
-                            LdapSearch app = new LdapSearch();
-                            List<String> list = app.getAllPersonNames();
-                            model.put("list", list);
+//                            LdapSearch app = new LdapSearch();
+//                            List<String> list = app.getAllPersonNames();
+//                            model.put("list", list);
                             Pageable limit = PageRequest.of(0,10);
                             Iterable<Message> messages = messageRepo.findAll(limit);
-                            model.put("messages", messages);
-                            model.put("greet", ownerth);
+//                            model.put("messages", messages);
+//                            model.put("greet", ownerth);
+                            defaultMethodIter(model, messages, ownerth);
                             model.put("error", "Этот сертификат выдан не Вам!");
                             return "search.html";
                         }
 
                     } else {
-                        LdapSearch app = new LdapSearch();
-                        List<String> list = app.getAllPersonNames();
-                        model.put("list", list);
+//                        LdapSearch app = new LdapSearch();
+//                        List<String> list = app.getAllPersonNames();
+//                        model.put("list", list);
                         Pageable limit = PageRequest.of(0,10);
                         Iterable<Message> messages = messageRepo.findAll(limit);
-                        model.put("messages", messages);
-                        model.put("greet", ownerth);
+//                        model.put("messages", messages);
+//                        model.put("greet", ownerth);
+                        defaultMethodIter(model, messages, ownerth);
                         model.put("error", "Сертификат просрочен!");
                         return "search.html";
                     }
                 } else {
-                    LdapSearch app = new LdapSearch();
-                    List<String> list = app.getAllPersonNames();
-                    model.put("list", list);
+//                    LdapSearch app = new LdapSearch();
+//                    List<String> list = app.getAllPersonNames();
+//                    model.put("list", list);
                     Pageable limit = PageRequest.of(0,10);
                     Iterable<Message> messages = messageRepo.findAll(limit);
-                    model.put("messages", messages);
-                    model.put("greet", ownerth);
+//                    model.put("messages", messages);
+//                    model.put("greet", ownerth);
+                    defaultMethodIter(model, messages, ownerth);
                     model.put("error", "Сертификат выдан другой организацией!");
                     return "search.html";
                 }
             } else {
-                LdapSearch app = new LdapSearch();
-                List<String> list = app.getAllPersonNames();
-                model.put("list", list);
+//                LdapSearch app = new LdapSearch();
+//                List<String> list = app.getAllPersonNames();
+//                model.put("list", list);
                 Pageable limit = PageRequest.of(0,10);
                 Iterable<Message> messages = messageRepo.findAll(limit);
-                model.put("messages", messages);
-                model.put("greet", ownerth);
+//                model.put("messages", messages);
+//                model.put("greet", ownerth);
+                defaultMethodIter(model, messages, ownerth);
                 model.put("error", "Сертификат не выбран.");
                 return "search.html";
             }
         } catch (CertificateException e) {
-            LdapSearch app = new LdapSearch();
-            List<String> list = app.getAllPersonNames();
-            model.put("list", list);
+//            LdapSearch app = new LdapSearch();
+//            List<String> list = app.getAllPersonNames();
+//            model.put("list", list);
             Pageable limit = PageRequest.of(0,10);
             Iterable<Message> messages = messageRepo.findAll(limit);
-            model.put("messages", messages);
-            model.put("greet", ownerth);
+//            model.put("messages", messages);
+//            model.put("greet", ownerth);
+            defaultMethodIter(model, messages, ownerth);
             model.put("error", "Выбран не сертификат.");
             return "search.html";
         }

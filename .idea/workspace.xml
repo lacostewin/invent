@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="authenticating-ldap:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c816e559-fd7d-4b8b-a6bf-d108a9de5cd5" name="Default Changelist" comment="" />
+    <list default="true" id="c816e559-fd7d-4b8b-a6bf-d108a9de5cd5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webapp/config/GenerateQRCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webapp/config/GenerateQRCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webapp/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webapp/config/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webapp/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webapp/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/webapp/repos/MessageRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/webapp/repos/MessageRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/config.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/sorttable.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/css.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/hist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/hist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/ownthing.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/ownthing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/qrcode.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/qrcode.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssv.cer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/AuthenticatingLdapApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/AuthenticatingLdapApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/config/AuthoritiesMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/config/AuthoritiesMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/config/LdapSearch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/config/LdapSearch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/config/WebSecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/config/WebSecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/controller/MainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/controller/MainController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/domain/Journal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/domain/Journal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/domain/Message.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/domain/Message.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/JournalAdd.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/JournalAdd.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/JournalFind.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/JournalFind.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/MessageModify.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/MessageModify.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/MessageRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/MessageRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/Roles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/webapp/repos/Roles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/css.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/css.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/css.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/hist.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/hist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/main.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/ownthing.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/ownthing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/search.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,20 +58,45 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
-        <option value="Class" />
         <option value="HTML File" />
+        <option value="Class" />
+        <option value="Interface" />
       </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="9d9c0e95-5d52-45ee-a940-cf2f9688d414" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="JPA Inspector" value="true" />
+        <entry key="JPA Palette" value="true" />
+        <entry key="JPA Structure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="JPA Inspector" value="false" />
+        <entry key="JPA Palette" value="false" />
+        <entry key="JPA Structure" value="false" />
+      </map>
     </option>
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.2.1\plugins\maven\lib\maven3" />
+        <option name="usePluginRegistry" value="true" />
       </MavenGeneralSettings>
     </option>
   </component>
   <component name="ProjectId" id="1iReGqQOdgjEPQjTzXSBPGG1Wri" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -35,17 +104,14 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/static" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Background" />
   </component>
   <component name="RecentsManager">
-    <key name="ExtractSuperBase.RECENT_KEYS">
-      <recent name="com.example.webapp.config" />
-    </key>
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.example.webapp.repos" />
     </key>
@@ -54,19 +120,24 @@
       <recent name="C:\java\ldap\src\main\java\com\example\webapp\repos" />
       <recent name="C:\java\ldap\src\main\resources\templates" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\java\ldap\src\main\resources\static" />
+      <recent name="C:\java\ldap\src\main\resources" />
+      <recent name="C:\java\ldap\src\main\resources\templates" />
+      <recent name="C:\java\ldap\src\main\java\com\example\authenticatingldap" />
+    </key>
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="com.example.webapp.config" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.webapp.repos" />
       <recent name="com.example.webapp.config" />
       <recent name="com.example.webapp.domain" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\java\ldap\src\main\resources\static" />
-      <recent name="C:\java\ldap\src\main\resources\templates" />
-      <recent name="C:\java\ldap\src\main\java\com\example\authenticatingldap" />
-    </key>
   </component>
   <component name="RunManager">
-    <configuration name="WebApp" type="Application" factoryName="Application">
+    <configuration name="WebApp" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
+      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../.jdks/corretto-11.0.12" />
       <option name="MAIN_CLASS_NAME" value="com.example.webapp.AuthenticatingLdapApplication" />
       <module name="ldap" />
       <method v="2">
@@ -85,159 +156,202 @@
     </task>
     <servers />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="552" y="161" key="#Plugins" timestamp="1603190591436">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="552" y="161" key="#Plugins/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603190591436" />
-    <state x="414" y="175" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601883906492">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="414" y="175" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601883906492" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1606217845894">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1606217845894" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604888325698" />
-    <state x="689" y="322" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1601883905423">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="689" y="322" key="#com.intellij.ide.util.TreeClassChooserDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601883905423" />
-    <state x="307" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1603176370696">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="473" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601908919734" />
-    <state x="307" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603176370696" />
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606218030169">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606218030169" />
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601977177971" />
-    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1604312365331">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604312365331" />
-    <state x="856" y="350" key="#com.intellij.tools.ToolEditorDialog" timestamp="1602129196173">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="856" y="350" key="#com.intellij.tools.ToolEditorDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602129196173" />
-    <state x="859" y="449" key="#debugger.expression.dialog" timestamp="1604369014592">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="859" y="449" key="#debugger.expression.dialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604369014592" />
-    <state width="410" height="466" key="DebuggerActiveHint" timestamp="1607934489942">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="387" height="466" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1603735293657" />
-    <state width="410" height="466" key="DebuggerActiveHint/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1607934489942" />
-    <state x="867" y="275" key="FileChooserDialogImpl" timestamp="1602129228925">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="867" y="275" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602129228925" />
-    <state width="1877" height="233" key="GridCell.Tab.0.bottom" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1607430929933" />
-    <state width="1877" height="144" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1607530608121" />
-    <state width="1877" height="233" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state width="1877" height="268" key="GridCell.Tab.0.bottom/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676757" />
-    <state width="1877" height="233" key="GridCell.Tab.0.center" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1607430929932" />
-    <state width="1877" height="144" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1607530608121" />
-    <state width="1877" height="233" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state width="1877" height="268" key="GridCell.Tab.0.center/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676756" />
-    <state width="1877" height="233" key="GridCell.Tab.0.left" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1607430929932" />
-    <state width="1877" height="144" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1607530608121" />
-    <state width="1877" height="233" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state width="1877" height="268" key="GridCell.Tab.0.left/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676756" />
-    <state width="1877" height="233" key="GridCell.Tab.0.right" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1607430929933" />
-    <state width="1877" height="144" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1607530608121" />
-    <state width="1877" height="233" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state width="1877" height="268" key="GridCell.Tab.0.right/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1602223676756" />
-    <state width="1877" height="233" key="GridCell.Tab.1.bottom" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1607430947483" />
-    <state width="1877" height="211" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1607442756137" />
-    <state width="1877" height="233" key="GridCell.Tab.1.bottom/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state width="1877" height="233" key="GridCell.Tab.1.center" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1607430947482" />
-    <state width="1877" height="211" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1607442756137" />
-    <state width="1877" height="233" key="GridCell.Tab.1.center/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state width="1877" height="233" key="GridCell.Tab.1.left" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1607430947482" />
-    <state width="1877" height="211" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1607442756137" />
-    <state width="1877" height="233" key="GridCell.Tab.1.left/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state width="1877" height="233" key="GridCell.Tab.1.right" timestamp="1608016890473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="211" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1607430947483" />
-    <state width="1877" height="211" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1607442756137" />
-    <state width="1877" height="233" key="GridCell.Tab.1.right/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016890473" />
-    <state x="490" y="175" key="Maven.ArtifactSearchDialog" timestamp="1606192788923">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="490" y="175" key="Maven.ArtifactSearchDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606192788923" />
-    <state x="490" y="175" key="Maven.ArtifactSearchDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602832071422" />
-    <state x="461" y="165" width="1253" height="710" key="SettingsEditor" timestamp="1608016886243">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1602180325147" />
-    <state x="461" y="165" width="1253" height="710" key="SettingsEditor/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1608016886243" />
-    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1602058743883">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="968" height="528" key="XDebugger.FullValuePopup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602058743883" />
-    <state x="565" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1603252493576">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="565" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1603252493576" />
-    <state x="527" y="249" width="906" height="629" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1605499602663">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="527" y="249" width="906" height="629" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1605499602663" />
-    <state x="462" y="299" width="833" height="678" key="new project wizard" timestamp="1604293349624">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="462" y="299" width="833" height="678" key="new project wizard/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604293349624" />
-    <state x="660" y="277" key="refactoring.ChangeSignatureDialog" timestamp="1607938338324">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="660" y="277" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1603776746621" />
-    <state x="660" y="277" key="refactoring.ChangeSignatureDialog/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1607938338324" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1607505457880">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="438" y="168" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1602871759639" />
-    <state x="616" y="240" key="run.anything.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1607505457880" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1607534192119">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1607534192119" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1605678400741" />
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-constants" />
+    <option featureType="dependencySupport" implementationName="java:org.slf4j:jul-to-slf4j" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.xml.bind:jakarta.xml.bind-api" />
+    <option featureType="dependencySupport" implementationName="java:org.javassist:javassist" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.sisu:sisu-guice" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-web" />
+    <option featureType="dependencySupport" implementationName="java:com.zaxxer:HikariCP" />
+    <option featureType="dependencySupport" implementationName="java:xalan:xalan" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-utils" />
+    <option featureType="dependencySupport" implementationName="java:com.sun.mail:jakarta.mail" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+    <option featureType="dependencySupport" implementationName="java:org.thymeleaf:thymeleaf-spring5" />
+    <option featureType="dependencySupport" implementationName="java:net.minidev:accessors-smart" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.sisu:sisu-inject-plexus" />
+    <option featureType="dependencySupport" implementationName="java:com.thoughtworks.qdox:qdox" />
+    <option featureType="dependencySupport" implementationName="java:org.aspectj:aspectjweaver" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.tomcat.embed:tomcat-embed-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-test" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml:classmate" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-css" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.datatype:jackson-datatype-jsr310" />
+    <option featureType="dependencySupport" implementationName="java:com.itextpdf:io" />
+    <option featureType="dependencySupport" implementationName="java:commons-io:commons-io" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate:hibernate-core" />
+    <option featureType="dependencySupport" implementationName="java:org.glassfish.jaxb:jaxb-runtime" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.ldap:spring-ldap-core" />
+    <option featureType="dependencySupport" implementationName="java:org.skyscreamer:jsonassert" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.tomcat.embed:tomcat-embed-websocket" />
+    <option featureType="dependencySupport" implementationName="java:ognl:ognl" />
+    <option featureType="dependencySupport" implementationName="java:ch.qos.logback:logback-classic" />
+    <option featureType="dependencySupport" implementationName="java:org.glassfish.jaxb:txw2" />
+    <option featureType="dependencySupport" implementationName="java:org.mockito:mockito-junit-jupiter" />
+    <option featureType="dependencySupport" implementationName="java:org.opentest4j:opentest4j" />
+    <option featureType="dependencySupport" implementationName="java:org.objenesis:objenesis" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.plexus:plexus-sec-dispatcher" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-xml" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-tx" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-aether-provider" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-ext" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-jcl" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-web" />
+    <option featureType="dependencySupport" implementationName="java:org.attoparser:attoparser" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-logging" />
+    <option featureType="dependencySupport" implementationName="java:org.thymeleaf.extras:thymeleaf-extras-springsecurity5" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-aop" />
+    <option featureType="dependencySupport" implementationName="java:org.bouncycastle:bcprov-jdk15on" />
+    <option featureType="dependencySupport" implementationName="java:ch.qos.logback:logback-core" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.core:jackson-databind" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.logging.log4j:log4j-to-slf4j" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven.shared:maven-shared-utils" />
+    <option featureType="dependencySupport" implementationName="java:com.itextpdf:kernel" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter" />
+    <option featureType="dependencySupport" implementationName="java:org.jboss.logging:jboss-logging" />
+    <option featureType="dependencySupport" implementationName="java:org.slf4j:slf4j-api" />
+    <option featureType="dependencySupport" implementationName="java:org.ow2.asm:asm" />
+    <option featureType="dependencySupport" implementationName="java:org.thymeleaf.extras:thymeleaf-extras-java8time" />
+    <option featureType="dependencySupport" implementationName="java:org.yaml:snakeyaml" />
+    <option featureType="dependencySupport" implementationName="java:antlr:antlr" />
+    <option featureType="dependencySupport" implementationName="java:com.unboundid:unboundid-ldapsdk" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-autoconfigure" />
+    <option featureType="dependencySupport" implementationName="java:org.postgresql:postgresql" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.sisu:sisu-inject-bean" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-test-autoconfigure" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-repository-metadata" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-json" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-expression" />
+    <option featureType="dependencySupport" implementationName="java:org.glassfish:jakarta.el" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-util" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.datatype:jackson-datatype-jdk8" />
+    <option featureType="dependencySupport" implementationName="java:org.assertj:assertj-core" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.module:jackson-module-parameter-names" />
+    <option featureType="dependencySupport" implementationName="java:com.vaadin.external.google:android-json" />
+    <option featureType="dependencySupport" implementationName="java:org.apiguardian:apiguardian-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-jdbc" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-model" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-jdbc" />
+    <option featureType="dependencySupport" implementationName="java:org.mockito:mockito-core" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.transaction:jakarta.transaction-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-thymeleaf" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.aether:aether-api" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-component-annotations" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-i18n" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-security" />
+    <option featureType="dependencySupport" implementationName="java:net.bytebuddy:byte-buddy" />
+    <option featureType="dependencySupport" implementationName="java:org.xmlunit:xmlunit-core" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-java" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter-params" />
+    <option featureType="dependencySupport" implementationName="java:com.beust:jcommander" />
+    <option featureType="dependencySupport" implementationName="java:com.itextpdf:itextpdf" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.aether:aether-util" />
+    <option featureType="dependencySupport" implementationName="java:org.hamcrest:hamcrest" />
+    <option featureType="dependencySupport" implementationName="java:com.google.zxing:core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-data-jpa" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.platform:junit-platform-engine" />
+    <option featureType="dependencySupport" implementationName="java:net.bytebuddy:byte-buddy-agent" />
+    <option featureType="dependencySupport" implementationName="java:xml-apis:xml-apis" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.pdfbox:fontbox" />
+    <option featureType="dependencySupport" implementationName="java:org.jboss:jandex" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-aspects" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-classworlds" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-svggen" />
+    <option featureType="dependencySupport" implementationName="java:org.dom4j:dom4j" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-test" />
+    <option featureType="dependencySupport" implementationName="java:com.google.zxing:javase" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-beans" />
+    <option featureType="dependencySupport" implementationName="java:com.jayway.jsonpath:json-path" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-settings-builder" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate.common:hibernate-commons-annotations" />
+    <option featureType="dependencySupport" implementationName="java:org.thymeleaf:thymeleaf" />
+    <option featureType="dependencySupport" implementationName="java:com.github.jai-imageio:jai-imageio-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-config" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-core" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-awt-util" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-jpa" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.activation:jakarta.activation-api" />
+    <option featureType="dependencySupport" implementationName="java:xml-apis:xml-apis-ext" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-ldap" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter-engine" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-compiler-javac" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-model-builder" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-compiler-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-mail" />
+    <option featureType="dependencySupport" implementationName="java:com.github.kenglxn.qrgen:core" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.plexus:plexus-cipher" />
+    <option featureType="dependencySupport" implementationName="java:commons-logging:commons-logging" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.unbescape:unbescape" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-tomcat" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.core:jackson-annotations" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-artifact" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-test" />
+    <option featureType="dependencySupport" implementationName="java:com.fasterxml.jackson.core:jackson-core" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-core" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.pdfbox:pdfbox" />
+    <option featureType="dependencySupport" implementationName="java:xalan:serializer" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.platform:junit-platform-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-configuration-processor" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.annotation:jakarta.annotation-api" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.persistence:jakarta.persistence-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-orm" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-context-support" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:batik-dom" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-test" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-context" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.xmlgraphics:xmlgraphics-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-compiler-manager" />
+    <option featureType="dependencySupport" implementationName="java:com.sun.istack:istack-commons-runtime" />
+    <option featureType="dependencySupport" implementationName="java:org.codehaus.plexus:plexus-interpolation" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven.shared:maven-shared-incremental" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-aop" />
+    <option featureType="dependencySupport" implementationName="java:com.github.kenglxn.qrgen:javase" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.aether:aether-spi" />
+    <option featureType="dependencySupport" implementationName="java:org.junit.jupiter:junit-jupiter-api" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven.plugins:maven-compiler-plugin" />
+    <option featureType="dependencySupport" implementationName="java:net.minidev:json-smart" />
+    <option featureType="dependencySupport" implementationName="java:com.github.librepdf:openpdf" />
+    <option featureType="dependencySupport" implementationName="java:org.bouncycastle:bcpkix-jdk15on" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-plugin-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot-starter-web" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.maven:maven-settings" />
+    <option featureType="dependencySupport" implementationName="java:com.sun.activation:jakarta.activation" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.logging.log4j:log4j-api" />
+    <option featureType="dependencySupport" implementationName="java:org.sonatype.aether:aether-impl" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+      <path value="$PROJECT_DIR$/src/main" />
+    </ignored-roots>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <breakpoint enabled="true" type="java-exception">
-          <properties class="java.lang.IllegalStateException" package="java.lang" />
-          <option name="timeStamp" value="1" />
+          <properties class="com.unboundid.util.json.JSONException" package="com.unboundid.util.json" />
+          <option name="timeStamp" value="26" />
         </breakpoint>
         <breakpoint enabled="true" type="java-exception">
-          <properties class="org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException" package="org.apache.tomcat.util.http.fileupload.impl" />
-          <option name="timeStamp" value="2" />
+          <properties class="org.postgresql.util.PSQLException" package="org.postgresql.util" />
+          <option name="timeStamp" value="27" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -247,20 +361,8 @@
         <PinnedItemInfo parentTag="org.springframework.security.web.context.HttpSessionSecurityContextRepository$SaveToSessionRequestWrapper" memberName="request" />
       </pinned-members>
     </pin-to-top-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="this.h" custom="java.lang.reflect.Proxy" />
-        <watch expression="messageModify" language="JAVA" />
-        <watch expression="journal.messageid" />
-        <watch expression="author" />
-        <watch expression="author" language="JAVA" />
-        <watch expression="journalAdd" language="JAVA" />
-        <watch expression="journalAdd" language="JAVA" />
-        <watch expression="journalFind" language="JAVA" />
-        <watch expression="table.rows.get(1).cells[2]" />
-        <watch expression="table.rows.get(1).cells[2]" />
-        <watch expression="((X509CertInfo)((X509CertImpl)cert).info).subject" custom="sun.security.x509.X509CertInfo,sun.security.x509.X509CertImpl" />
-      </configuration>
-    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ldap$WebApp.ic" NAME="WebApp Coverage Results" MODIFIED="1632161818674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

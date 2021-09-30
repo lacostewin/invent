@@ -1,11 +1,15 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns:form="http://www.w3.org/1999/html">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css.css">
     <title>Ваши ТМЦ</title>
+    <script  th:src="@{js/cadesplugin_api.js}"></script>
+    <script  th:src="@{js/Code.js}"></script>
+    <script  th:src="@{js/es6-promise.min.js}"></script>
+    <script  th:src="@{js/ie_eventlistner_polyfill.js}"></script>
+    <script th:language="javascript">window.allow_firefox_cadesplugin_async=1</script>
 </head>
 <body>
 <div class="menu">
@@ -14,6 +18,10 @@
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Выйти"/>
     </form>
+    <div id="info_msg" style="text-align:right;">
+        <span id="PlugInEnabledTxt" style="text-align:right; color:red;">Для подписания документов необходим плагин КриптоПро!</span>
+        <img src="red_dot.png" width="10" height="10" id="PluginEnabledImg"/>
+    </div>
 </div>
 <div class="navi">
         <a sec:authorize="hasRole('ROLE_INVENTADMIN')" href="/main">Добавить ТМЦ</a><a style="padding-left:4.00em;" href="/search">Поиск ТМЦ</a>
@@ -35,7 +43,7 @@
     </tr>
     </thead>
     <tbody>
-    <form th:action="@{/}" method="post" enctype="multipart/form-data"
+    <form th:action="@{/}" method="post"
           onsubmit="return confirm('Вы уверены, что все перечисленные ТМЦ у Вас есть в наличии?');">
     <tr th:each="mess : ${messages}">
         <td th:text="${mess.id}"></td>
@@ -52,7 +60,6 @@
         <input type="hidden" name="text" th:value="${mess.text}"/>
         <input type="hidden" name="invid" th:value="${mess.invid}"/>
         <input type="hidden" name="author" th:value="${greet}"/>
-
     </tr>
     <tr style='display: contents;'>
         <td></td>
@@ -63,15 +70,58 @@
         <td style='display: flex;'>
         <input type="checkbox" id="select-all" />
         <input type="submit" value="Подтвердить наличие" style='display: block; margin-left: auto;' />
-            <form enctype="multipart/form-data">
+            <form >
                 <label>
                     <img src="/crt.png" title="Выбрать файл сертификата" style='display: block; margin-left: auto; margin-right: auto;' />
-                    <input type="file" name="file" accept="application/pkix-cert" style="display:none" />
+
+                    <input type="hidden" id="subject" name="subject" th:value="0"/>
+                    <input type="hidden" id="issuer" name="issuer" th:value="0"/>
+                    <input type="hidden" id="from" name="from" th:value="0"/>
+                    <input type="hidden" id="till" name="till" th:value="0"/>
+                    <input type="hidden" id="certsn" name="certsn" th:value="0"/>
                 </label>
             </form>
         </td>
     </tr>
     </form>
+    <table>
+            <td>
+                <h4 id="info_msgs" name="CertificateTitle" style="margin-top: 0px;margin-bottom: 0px;">Выберите сертификат, выданный вашей организацией:</h4>
+                <div id="item_border" name="CertListBoxToHide">
+                    <select size="8" name="CertListBox" id="CertListBox" style="height:3.2em;width:100%;resize:none;border:0;">
+                    </select>
+                </div>
+                <script th:inline="javascript">
+                                        var txtDataToSign = "Hello World";
+                                        var canPromise = !!window.Promise;
+                                        if(isEdge()) {
+                                            ShowEdgeNotSupported();
+                                        } else {
+                                            if(canPromise) {
+                                                cadesplugin.then(function () {
+                                                        Common_CheckForPlugIn();
+                                                       },
+                                                       function(error) {
+                                                           document.getElementById('PluginEnabledImg').setAttribute("src", "red_dot.png");
+                                                           document.getElementById('PlugInEnabledTxt').innerHTML = error;
+                                                       }
+                                               );
+                                            } else {
+                                                window.addEventListener("message", function (event){
+                                                    if (event.data == "cadesplugin_loaded") {
+                                                        CheckForPlugIn_NPAPI();
+                                                    } else if(event.data == "cadesplugin_load_error") {
+                                                           document.getElementById('PluginEnabledImg').setAttribute("src", "red_dot.png");
+                                                           document.getElementById('PlugInEnabledTxt').innerHTML = "Плагин не загружен";
+                                                    }
+                                                    },
+                                                false);
+                                                window.postMessage("cadesplugin_echo_request", "*");
+                                            }
+                                        }
+                </script>
+        </td>
+    </table>
     </tbody>
 </table>
 </div>
